@@ -1,1 +1,17 @@
-# PowerfulWindSlickedBackHairCS-LX_Improve
+# PowerfulWindSlickedBackHair CS-LX Improve
+## 强 风 大 窗 口
+
+b站刷到的视频，感觉有意思，程序原作者说源码不小心搞丢了，好在可以反编译，这是反编译完成的项目
+
+除了反编译还进行了以下改进：
+
+#### 1、字体加入资源文件，解决系统没用安装相应字体，使字幕变成默认宋体
+#### 2、execonfig删了，只要有安装framework 4.7.2或以上就能正常运行，一般win10或以上自带不用安装
+#### 3、打开程序，自动最小化资源管理器窗口
+#### 4、现在整个桌面也会随背景变色，效果更好（开了第三方壁纸软件可能变不了）
+
+还有一些小变动。不知道是反编译还是原本就有的问题，窗口不是很稳定，有些bug
+
+B站视频：https://www.bilibili.com/video/BV1Kz4y1p7sz
+
+原作者：https://github.com/CS-LX
