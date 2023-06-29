@@ -39,6 +39,7 @@ namespace PowerfulWindSlickedBackHair
         private JumpingYukiForm yukiForm;
 
         private int offset = 3;
+        private int bgOffset = 0;
 
         private bool isSummonBackgroundForm;
 
@@ -58,7 +59,15 @@ namespace PowerfulWindSlickedBackHair
             base.Location = new Point(workingArea.Width - base.Size.Width, workingArea.Height - base.Size.Height);
             if (File.Exists("Offset.txt"))
             {
-                offset = int.Parse(File.ReadAllText("Offset.txt"));
+                try
+                {
+                    var array = File.ReadAllText("Offset.txt").Split(' ');
+                    offset = int.Parse(array[0]);
+                    bgOffset = int.Parse(array[1]);
+                }
+                catch (Exception)
+                {
+                }
             }
             LoadFonts();
 
@@ -136,7 +145,7 @@ namespace PowerfulWindSlickedBackHair
 
             Thread frameTracker = Tracker.AddThread("FrameTracker", delegate
             {
-                int millisecondsTimeout = 40 - offset;
+                int millisecondsTimeout = 60 - offset;
                 while (true)
                 {
                     Tracker.frame++;
@@ -145,12 +154,13 @@ namespace PowerfulWindSlickedBackHair
             });
             Thread thread = Tracker.AddThread("FrameUpdater", delegate
             {
-                int num = 40 - offset;
+                int num = 60 - offset;
                 Stream stream = new FileStream("Assets\\Audio.mp3", FileMode.Open);
                 reader = new Mp3FileReader(stream);
                 wave = new WaveOut();
                 wave.Init((IWaveProvider)(object)reader);
                 wave.Play();
+                Thread.Sleep(bgOffset);
                 frameTracker.Start();
                 while (true)
                 {
@@ -208,18 +218,18 @@ namespace PowerfulWindSlickedBackHair
 
         private void Update(long f, Rectangle screen)
         {
-            long num = f - offset;
+            long num = f;
 
             //壁纸更新
             if (num == 60)
                 this.WindowState = FormWindowState.Minimized;
-            else if (num >= 387 && num < 462)
+            else if (num >= 387 && num < 464)
                 ChangeWallpaper(2);
-            else if (num >= 461 && num < 539)
+            else if (num >= 464 && num < 542)
                 ChangeWallpaper(1);
-            else if (num >= 539 && num < 614)
+            else if (num >= 542 && num < 616)
                 ChangeWallpaper(2);
-            else if (num >= 614 && num < 630)
+            else if (num >= 616 && num < 630)
                 ChangeWallpaper(1);
             else if (num >= 2870 && num < 2880)
                 ChangeWallpaper(0);
