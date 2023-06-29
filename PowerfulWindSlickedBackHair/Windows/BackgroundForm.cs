@@ -847,6 +847,8 @@ namespace PowerfulWindSlickedBackHair.Windows
 				{
 					if (num3 == 2523L)
 					{
+						//this.Left += 100;
+						this.Left -= 200;
 						this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
 						this.text.TextAlign = ContentAlignment.MiddleLeft;
 						this.text.Text = "強風オールバック\r\n但是Windows";
@@ -863,7 +865,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 				{
 					if (num3 == 2677L)
 					{
-						this.text.Text = "改: LX\r\n显示: winform\r\n\n反编译/补充功能：\nSunnyDesignor";
+						this.text.Text = "改: LX\r\n显示: winform\r\n\n反编译/补充功能：\nGithub.com/SunnyDesignor";
 					}
 				}
 				else
@@ -875,7 +877,8 @@ namespace PowerfulWindSlickedBackHair.Windows
 			{
 				if (num3 == 2818L)
 				{
-					this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
+                    this.Left += 200;
+                    this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
 					this.text.TextAlign = ContentAlignment.MiddleCenter;
 					this.text.Text = "谢谢观看\r\n记得三连~";
 				}

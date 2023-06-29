@@ -18,6 +18,13 @@ using Sunny.UI.Win32;
 
 namespace PowerfulWindSlickedBackHair
 {
+    /*
+     * 用一堆窗口播放 强风大背头 https://youtu.be/D6DVTLvOupE / https://www.bilibili.com/video/BV1n24y1u7ht
+     * 演示：https://www.bilibili.com/video/BV1Kz4y1p7sz
+     * 原作者：https://github.com/CS-LX
+     * 项目地址(恢复)：https://github.com/SunnyDesignor/PowerfulWindSlickedBackHairCS-LX_Improve
+     */
+
     public partial class MainForm : Form
     {
 
@@ -53,18 +60,17 @@ namespace PowerfulWindSlickedBackHair
             {
                 offset = int.Parse(File.ReadAllText("Offset.txt"));
             }
-            Setfont();
+            LoadFonts();
 
             SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
             currentWallpaper = currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
             Console.WriteLine("当前桌面壁纸: " + currentWallpaper);
 
             ChangeWallpaper(1);
-            MinForeWin();
         }
 
         public static PrivateFontCollection otherFont = new PrivateFontCollection();
-        public void Setfont()
+        public void LoadFonts()
         {
             string AppPath = Application.StartupPath;
             try
@@ -76,7 +82,6 @@ namespace PowerfulWindSlickedBackHair
             }
         }
 
-
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
         // 定义常量
@@ -85,8 +90,7 @@ namespace PowerfulWindSlickedBackHair
         string currentWallpaper = new string('\0', 260);
         int oldType = 0;
         /// <summary>
-        /// 设置壁纸    
-        /// 0恢复原来的桌面壁纸  1纯色黄  2纯色蓝
+        /// 设置壁纸    0恢复原来的桌面壁纸  1纯色黄  2纯色蓝
         /// </summary>
         private void ChangeWallpaper(int type)
         {
@@ -113,23 +117,23 @@ namespace PowerfulWindSlickedBackHair
         }
 
         [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, IntPtr lParam);
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        private void MinForeWin()
-        {
-            try
-            {
-                IntPtr hwnd = GetForegroundWindow(); // 获取当前焦点窗口的句柄
-                ShowWindow(hwnd, 6); // 设置窗口状态为最小化
-            }
-            catch { };
-        }
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        const int WM_COMMAND = 0x111; // 命令的消息
+        const int MIN_ALL = 419; // 最小化所有窗口的命令
+
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            CmdHelper.ExeCommand("taskkill /im cmd.exe /f");
+            //CmdHelper.ExeCommand("taskkill /im cmd.exe /f");
+
+            //最小化所有窗口
+            IntPtr lHwnd = FindWindow("Shell_TrayWnd", "");
+            SendMessage(lHwnd, WM_COMMAND, MIN_ALL, IntPtr.Zero);
+            this.Focus();
+
             Thread frameTracker = Tracker.AddThread("FrameTracker", delegate
             {
                 int millisecondsTimeout = 40 - offset;
@@ -195,12 +199,11 @@ namespace PowerfulWindSlickedBackHair
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ChangeWallpaper(0);
             Tracker.StopAll();
             wave.Stop();
             wave.Dispose();
-            ChangeWallpaper(0);
             CmdHelper.ExeCommand("taskkill /im PowerfulWindSlickedBackHair.exe /f");
-            Environment.Exit(0);
         }
 
         private void Update(long f, Rectangle screen)
@@ -208,7 +211,9 @@ namespace PowerfulWindSlickedBackHair
             long num = f - offset;
 
             //壁纸更新
-            if (num >= 387 && num < 462)
+            if (num == 60)
+                this.WindowState = FormWindowState.Minimized;
+            else if (num >= 387 && num < 462)
                 ChangeWallpaper(2);
             else if (num >= 461 && num < 539)
                 ChangeWallpaper(1);
@@ -218,6 +223,8 @@ namespace PowerfulWindSlickedBackHair
                 ChangeWallpaper(1);
             else if (num >= 2870 && num < 2880)
                 ChangeWallpaper(0);
+            else if (num > 3000)
+                this.Close();
 
             long num2 = num;
 

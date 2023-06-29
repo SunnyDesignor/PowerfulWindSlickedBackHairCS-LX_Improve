@@ -109,7 +109,7 @@ namespace PowerfulWindSlickedBackHair
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Opacity = 0.7D;
+            this.Opacity = 0.8D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Console";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
