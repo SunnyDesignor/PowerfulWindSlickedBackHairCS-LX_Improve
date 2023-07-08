@@ -8,12 +8,12 @@ using System.Security;
 using System.Security.Permissions;
 
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyTitle("PowerfulWindSlickedBackHair")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("强 风 大 窗 口")]
+[assembly: AssemblyDescription("强 风 大 窗 口")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP")]
+[assembly: AssemblyCompany("CS-LX")]
 [assembly: AssemblyProduct("PowerfulWindSlickedBackHair")]
-[assembly: AssemblyCopyright("Copyright © HP 2023")]
+[assembly: AssemblyCopyright("Copyright © CS-LX 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("2ae3ee39-6b0a-4d0f-8bde-4bc89fe0c7ef")]
