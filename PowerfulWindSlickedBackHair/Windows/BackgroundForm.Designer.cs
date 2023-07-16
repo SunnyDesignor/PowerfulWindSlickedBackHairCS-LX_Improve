@@ -17,7 +17,7 @@
 		// Token: 0x06000021 RID: 33 RVA: 0x00004C08 File Offset: 0x00002E08
 		private void InitializeComponent()
 		{
-            this.text = new Sunny.UI.UILabel();
+            this.text = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // text
@@ -29,7 +29,7 @@
             this.text.Margin = new System.Windows.Forms.Padding(0);
             this.text.Name = "text";
             this.text.Size = new System.Drawing.Size(1120, 576);
-            this.text.Style = Sunny.UI.UIStyle.Custom;
+            //this.text.Style = Sunny.UI.UIStyle.Custom;
             this.text.TabIndex = 0;
             this.text.Text = "外出た瞬間";
             this.text.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -52,6 +52,6 @@
 		private global::System.ComponentModel.IContainer components = null;
 
 		// Token: 0x0400001D RID: 29
-		private global::Sunny.UI.UILabel text;
+		private global::System.Windows.Forms.Label text;
 	}
 }

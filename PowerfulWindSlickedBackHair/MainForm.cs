@@ -1,19 +1,13 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using AxWMPLib;
+using PowerfulWindSlickedBackHair.Tools;
+using PowerfulWindSlickedBackHair.Windows;
+using System;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using NAudio.Wave;
-using PowerfulWindSlickedBackHair;
-using PowerfulWindSlickedBackHair.Tools;
-using PowerfulWindSlickedBackHair.Windows;
-using Sunny.UI;
-using Sunny.UI.Win32;
 
 
 namespace PowerfulWindSlickedBackHair
@@ -30,15 +24,12 @@ namespace PowerfulWindSlickedBackHair
 
         private bool isCursorPressOnListView;
 
-        private Mp3FileReader reader;
-
-        private WaveOut wave;
-
         private BackgroundForm backgroundForm;
 
         private JumpingYukiForm yukiForm;
 
         private int offset = 3;
+        private double bgRate = 1;
         private int bgOffset = 0;
 
         private bool isSummonBackgroundForm;
@@ -61,9 +52,10 @@ namespace PowerfulWindSlickedBackHair
             {
                 try
                 {
-                    var array = File.ReadAllText("Offset.txt").Split(' ');
-                    offset = int.Parse(array[0]);
-                    bgOffset = int.Parse(array[1]);
+                    var array = File.ReadAllLines("Offset.txt");
+                    offset = int.Parse(array[0].Split('：')[1]);
+                    bgRate = double.Parse(array[1].Split('：')[1]);
+                    bgOffset = int.Parse(array[2].Split('：')[1]);
                 }
                 catch (Exception)
                 {
@@ -73,8 +65,6 @@ namespace PowerfulWindSlickedBackHair
 
             SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
             currentWallpaper = currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
-            Console.WriteLine("当前桌面壁纸: " + currentWallpaper);
-
             ChangeWallpaper(1);
         }
 
@@ -96,12 +86,12 @@ namespace PowerfulWindSlickedBackHair
         // 定义常量
         private const int SPI_GETDESKWALLPAPER = 0x0073;
         private const int SPI_SETDESKWALLPAPER = 0x0014;
-        string currentWallpaper = new string('\0', 260);
-        int oldType = 0;
+        static string currentWallpaper = new string('\0', 260);
+        static int oldType = 0;
         /// <summary>
         /// 设置壁纸    0恢复原来的桌面壁纸  1纯色黄  2纯色蓝
         /// </summary>
-        private void ChangeWallpaper(int type)
+        public static void ChangeWallpaper(int type)
         {
             if (type == oldType)
                 return;
@@ -133,7 +123,6 @@ namespace PowerfulWindSlickedBackHair
         const int WM_COMMAND = 0x111; // 命令的消息
         const int MIN_ALL = 419; // 最小化所有窗口的命令
 
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             //CmdHelper.ExeCommand("taskkill /im cmd.exe /f");
@@ -145,7 +134,7 @@ namespace PowerfulWindSlickedBackHair
 
             Thread frameTracker = Tracker.AddThread("FrameTracker", delegate
             {
-                int millisecondsTimeout = 60 - offset;
+                int millisecondsTimeout = 80 - offset;
                 while (true)
                 {
                     Tracker.frame++;
@@ -154,13 +143,7 @@ namespace PowerfulWindSlickedBackHair
             });
             Thread thread = Tracker.AddThread("FrameUpdater", delegate
             {
-                int num = 60 - offset;
-                Stream stream = new FileStream("Assets\\Audio.mp3", FileMode.Open);
-                reader = new Mp3FileReader(stream);
-                wave = new WaveOut();
-                wave.Init((IWaveProvider)(object)reader);
-                wave.Play();
-                Thread.Sleep(bgOffset);
+                int num = 80 - offset;
                 frameTracker.Start();
                 while (true)
                 {
@@ -203,17 +186,61 @@ namespace PowerfulWindSlickedBackHair
                     }
                 }
             });
-            thread.Start();
-            thread2.Start();
+
+            void BeginWinDance()
+            {
+                thread.Start();
+                thread2.Start();
+            }
+
+            new Thread(() =>
+            {
+                if (bgOffset >= 0)
+                {
+                    PlaySound();
+                    Thread.Sleep(Math.Abs(bgOffset));
+                    BeginWinDance();
+                }
+                else
+                {
+                    BeginWinDance();
+                    Thread.Sleep(Math.Abs(bgOffset));
+                    PlaySound();
+                }
+            }).Start();
+
+        }
+
+        void PlaySound()
+        {
+            axWindowsMediaPlayer1.URL = "Assets\\Audio.mp3";
+            axWindowsMediaPlayer1.settings.volume = 100;
+            axWindowsMediaPlayer1.settings.rate = bgRate;
+            axWindowsMediaPlayer1.Ctlcontrols.play();
+            bool soundReady = false;
+            axWindowsMediaPlayer1.PlayStateChange += (_, eState) =>
+            {
+                if ((int)WMPLib.WMPPlayState.wmppsPlaying == eState.newState)
+                    soundReady = true;
+            };
+            while (!soundReady)
+                Thread.Sleep(1);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ChangeWallpaper(0);
             Tracker.StopAll();
-            wave.Stop();
-            wave.Dispose();
-            CmdHelper.ExeCommand("taskkill /im PowerfulWindSlickedBackHair.exe /f");
+            axWindowsMediaPlayer1.close();
+            notifyIcon1.Visible = false;
+            notifyIcon1.Dispose();
+            ChangeWallpaper(0);
+            //CmdHelper.ExeCommand("taskkill /im PowerfulWindSlickedBackHair.exe /f");
+            new Thread(() =>
+            {
+                Thread.Sleep(1500);
+                Environment.Exit(0);
+            }).Start();
         }
 
         private void Update(long f, Rectangle screen)
@@ -377,10 +404,10 @@ namespace PowerfulWindSlickedBackHair
                                     Thread thread24 = new Thread((ThreadStart)delegate
                                     {
                                         ErrorF errorF = new ErrorF();
-                                        errorF.ShowDialog(new Point(screen.Width / 2 - errorF.Width / 2 - i * 40, screen.Height / 2 - errorF.Height / 2 + i * 30), 1226);
+                                        errorF.ShowDialog(new Point(screen.Width / 2 - errorF.Width / 2 - i * 40, screen.Height / 2 - errorF.Height / 2 + i * 30), 1246);
                                     });
                                     thread24.Start();
-                                    Thread.Sleep(50);
+                                    Thread.Sleep(70);
                                 }
                             });
                             thread11.Start();

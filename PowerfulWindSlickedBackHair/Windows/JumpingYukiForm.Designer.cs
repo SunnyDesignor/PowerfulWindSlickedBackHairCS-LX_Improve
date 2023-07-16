@@ -27,6 +27,7 @@
             this.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.JumpDown;
             this.DoubleBuffered = true;
             this.Name = "JumpingYukiForm";
+            this.Opacity = 0.75D;
             this.ShowIcon = false;
             this.TopMost = true;
             this.Load += new System.EventHandler(this.JumpingYukiForm_Load);
