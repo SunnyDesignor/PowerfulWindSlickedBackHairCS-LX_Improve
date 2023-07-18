@@ -30,7 +30,7 @@
             this.DoubleBuffered = true;
             this.Name = "StaticPigeonF";
             this.ShowIcon = false;
-            this.Text = "Up主";
+            this.Text = "鳩";
             this.ResumeLayout(false);
 
 		}

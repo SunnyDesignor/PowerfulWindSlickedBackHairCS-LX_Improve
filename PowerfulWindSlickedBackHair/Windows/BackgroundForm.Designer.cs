@@ -43,7 +43,7 @@
             this.Controls.Add(this.text);
             this.Name = "BackgroundForm";
             this.ShowIcon = false;
-            this.Text = "背景呐";
+            this.Text = "バックグラウンド";
             this.ResumeLayout(false);
 
 		}

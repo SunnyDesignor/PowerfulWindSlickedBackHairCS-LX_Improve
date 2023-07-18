@@ -87,9 +87,9 @@ namespace PowerfulWindSlickedBackHair.Windows
                             {
                                 NotifyIcon notifyIcon = new NotifyIcon();
                                 notifyIcon.Visible = true;
-                                notifyIcon.BalloonTipText = "风力实在是太强了！\r\n我整条狗都快被吹飞了！";
+                                notifyIcon.BalloonTipText = "風がとても強いです!\r\n私の犬全体が吹き飛ばされようとしています!";
                                 notifyIcon.Icon = new Icon("Assets\\Cross.ico");
-                                notifyIcon.ShowBalloonTip(1000, "风力实在是太强了！", "我整条狗都快被吹飞了！", ToolTipIcon.Warning);
+                                notifyIcon.ShowBalloonTip(1000, "風がとても強いです!", "私の犬全体が吹き飛ばされようとしています!", ToolTipIcon.Warning);
                                 this.isShowMsg = false;
                             }
                             Bitmap bitmap = new Bitmap(dogRolling);

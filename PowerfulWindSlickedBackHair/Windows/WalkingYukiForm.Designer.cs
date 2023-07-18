@@ -28,7 +28,7 @@
             this.ClientSize = new System.Drawing.Size(279, 569);
             this.Name = "WalkingYukiForm";
             this.ShowIcon = false;
-            this.Text = "正在踱步...";
+            this.Text = "ペーシング。。。";
             this.ResumeLayout(false);
 
 		}

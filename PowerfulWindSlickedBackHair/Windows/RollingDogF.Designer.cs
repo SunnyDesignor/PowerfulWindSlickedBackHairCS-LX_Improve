@@ -30,7 +30,7 @@
             this.DoubleBuffered = true;
             this.Name = "RollingDogF";
             this.ShowIcon = false;
-            this.Text = "勾";
+            this.Text = "犬";
             this.ResumeLayout(false);
 
 		}

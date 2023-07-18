@@ -852,7 +852,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                         changedLeft = true;
                         this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
                         this.text.TextAlign = ContentAlignment.MiddleLeft;
-                        this.text.Text = "強風オールバック\r\n但是Windows";
+                        this.text.Text = "強風オールバック\r\nしかしWindows";
                     }
                 }
                 else
@@ -883,12 +883,12 @@ namespace PowerfulWindSlickedBackHair.Windows
                     changedLeft2 = true;
                     this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
                     this.text.TextAlign = ContentAlignment.MiddleCenter;
-                    this.text.Text = "谢谢观看\r\n记得三连~";
+                    this.text.Text = "ご覧いただきありがとうございます\r\n好きになることを忘れないでください~";
                 }
             }
             else
             {
-                this.text.Text = "使用插件:\r\nNAudio SunnyUI";
+                this.text.Text = "プラグインの使用:\r\nNAudio SunnyUI";
             }
         }
 

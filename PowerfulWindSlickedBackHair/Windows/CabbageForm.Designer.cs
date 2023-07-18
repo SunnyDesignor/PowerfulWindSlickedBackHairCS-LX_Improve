@@ -29,7 +29,7 @@
             this.DoubleBuffered = true;
             this.Name = "CabbageForm";
             this.ShowIcon = false;
-            this.Text = "不明绿色圆球";
+            this.Text = "未知の緑色のボール";
             this.Click += new System.EventHandler(this.CabbageForm_Click);
             this.ResumeLayout(false);
 

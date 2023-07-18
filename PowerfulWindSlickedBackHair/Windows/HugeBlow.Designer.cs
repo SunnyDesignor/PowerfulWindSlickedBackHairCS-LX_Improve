@@ -29,7 +29,7 @@
             this.DoubleBuffered = true;
             this.Name = "HugeBlow";
             this.ShowIcon = false;
-            this.Text = "汽笛";
+            this.Text = "口笛を吹く";
             this.Load += new System.EventHandler(this.HugeBlow_Load);
             this.ResumeLayout(false);
 
