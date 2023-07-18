@@ -287,7 +287,6 @@
     <EmbeddedResource Include="Windows\FightForm.resx">
       <DependentUpon>FightForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Windows\FloatWindowHelperF.resources" />
     <EmbeddedResource Include="Windows\HugeBlow.resx">
       <DependentUpon>HugeBlow.cs</DependentUpon>
     </EmbeddedResource>
