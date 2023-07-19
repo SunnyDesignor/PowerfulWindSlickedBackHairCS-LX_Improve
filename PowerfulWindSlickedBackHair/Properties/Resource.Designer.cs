@@ -59,5 +59,77 @@ namespace PowerfulWindSlickedBackHair.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 バックグラウンド 的本地化字符串。
+        /// </summary>
+        internal static string BackgroundTitle {
+            get {
+                return ResourceManager.GetString("BackgroundTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 犬 的本地化字符串。
+        /// </summary>
+        internal static string DogTitle {
+            get {
+                return ResourceManager.GetString("DogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 風がとても強いです!\r\n私の犬全体が吹き飛ばされようとしています! 的本地化字符串。
+        /// </summary>
+        internal static string NotificationsFromDog {
+            get {
+                return ResourceManager.GetString("NotificationsFromDog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 ペーシング。。。 的本地化字符串。
+        /// </summary>
+        internal static string PacingTitle {
+            get {
+                return ResourceManager.GetString("PacingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 鳩 的本地化字符串。
+        /// </summary>
+        internal static string PigeonsTitle {
+            get {
+                return ResourceManager.GetString("PigeonsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 強風オールバック\r\nしかしWindows 的本地化字符串。
+        /// </summary>
+        internal static string PowerfulWindButWindowsText {
+            get {
+                return ResourceManager.GetString("PowerfulWindButWindowsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 未知の緑色のボール 的本地化字符串。
+        /// </summary>
+        internal static string UnknownGreenSphereTitle {
+            get {
+                return ResourceManager.GetString("UnknownGreenSphereTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 口笛を吹く 的本地化字符串。
+        /// </summary>
+        internal static string WhistleTitle {
+            get {
+                return ResourceManager.GetString("WhistleTitle", resourceCulture);
+            }
+        }
     }
 }

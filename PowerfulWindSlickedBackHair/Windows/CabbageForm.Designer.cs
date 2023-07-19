@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using PowerfulWindSlickedBackHair.Properties;
+using System.Globalization;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x0200000C RID: 12
 	public partial class CabbageForm : global::System.Windows.Forms.Form
@@ -29,7 +32,7 @@
             this.DoubleBuffered = true;
             this.Name = "CabbageForm";
             this.ShowIcon = false;
-            this.Text = "未知の緑色のボール";
+            this.Text = Resources.ResourceManager.GetString("PacingTitle", CultureInfo.CurrentCulture);
             this.Click += new System.EventHandler(this.CabbageForm_Click);
             this.ResumeLayout(false);
 

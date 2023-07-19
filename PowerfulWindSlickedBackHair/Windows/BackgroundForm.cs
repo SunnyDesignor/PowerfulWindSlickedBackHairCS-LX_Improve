@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
+using PowerfulWindSlickedBackHair.Properties;
 using Sunny.UI;
 
 namespace PowerfulWindSlickedBackHair.Windows
@@ -852,7 +854,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                         changedLeft = true;
                         this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
                         this.text.TextAlign = ContentAlignment.MiddleLeft;
-                        this.text.Text = "強風オールバック\r\nしかしWindows";
+                        this.text.Text = Resources.ResourceManager.GetString("PowerfulWindButWindowsText",CultureInfo.CurrentCulture);
                     }
                 }
                 else

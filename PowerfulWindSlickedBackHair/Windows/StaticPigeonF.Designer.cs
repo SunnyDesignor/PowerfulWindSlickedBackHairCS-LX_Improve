@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using PowerfulWindSlickedBackHair.Properties;
+using System.Globalization;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x02000013 RID: 19
 	public partial class StaticPigeonF : global::System.Windows.Forms.Form
@@ -30,7 +33,7 @@
             this.DoubleBuffered = true;
             this.Name = "StaticPigeonF";
             this.ShowIcon = false;
-            this.Text = "鳩";
+            this.Text = Resources.ResourceManager.GetString("PigeonsTitle", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

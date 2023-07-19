@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using PowerfulWindSlickedBackHair.Properties;
+using System.Globalization;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x02000014 RID: 20
 	public partial class HugeBlow : global::System.Windows.Forms.Form
@@ -29,7 +32,7 @@
             this.DoubleBuffered = true;
             this.Name = "HugeBlow";
             this.ShowIcon = false;
-            this.Text = "口笛を吹く";
+            this.Text = Resources.ResourceManager.GetString("WhistleTitle", CultureInfo.CurrentCulture);
             this.Load += new System.EventHandler(this.HugeBlow_Load);
             this.ResumeLayout(false);
 

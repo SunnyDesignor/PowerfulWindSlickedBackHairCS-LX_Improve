@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using PowerfulWindSlickedBackHair.Properties;
+using System.Globalization;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x0200000D RID: 13
 	public partial class DogWalkF : global::System.Windows.Forms.Form
@@ -30,7 +33,7 @@
             this.MinimizeBox = false;
             this.Name = "DogWalkF";
             this.ShowIcon = false;
-            this.Text = "犬";
+            this.Text = Resources.ResourceManager.GetString("DogText", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

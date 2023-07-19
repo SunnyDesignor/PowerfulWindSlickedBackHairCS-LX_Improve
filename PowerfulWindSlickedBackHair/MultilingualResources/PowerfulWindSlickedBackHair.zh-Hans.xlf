@@ -5,7 +5,12 @@
       <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="1.0.0.0" tool-company="Microsoft" />
     </header>
     <body>
-      <group id="POWERFULWINDSLICKEDBACKHAIR/PROPERTIES/RESOURCE.RESX" datatype="resx" />
+      <group id="POWERFULWINDSLICKEDBACKHAIR/PROPERTIES/RESOURCE.RESX" datatype="resx">
+        <trans-unit id="BackgroundTitle" translate="yes" xml:space="preserve">
+          <source>バックグラウンド</source>
+          <target state="new">バックグラウンド</target>
+        </trans-unit>
+      </group>
     </body>
   </file>
   <file datatype="xml" source-language="ja-JP" target-language="zh-Hans" original="POWERFULWINDSLICKEDBACKHAIR/MAINFORM.RESX" tool-id="MultilingualAppToolkit" product-name="n/a" product-version="n/a" build-num="n/a">
@@ -176,14 +181,6 @@
     </header>
     <body>
       <group id="POWERFULWINDSLICKEDBACKHAIR/WINDOWS/YUKICLAPF.RESX" datatype="resx" />
-    </body>
-  </file>
-  <file datatype="xml" source-language="ja-JP" target-language="zh-Hans" original="POWERFULWINDSLICKEDBACKHAIR/WINDOWS/AHHHF.RESX" tool-id="MultilingualAppToolkit" product-name="n/a" product-version="n/a" build-num="n/a">
-    <header>
-      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="1.0.0.0" tool-company="Microsoft" />
-    </header>
-    <body>
-      <group id="POWERFULWINDSLICKEDBACKHAIR/WINDOWS/AHHHF.RESX" datatype="resx" />
     </body>
   </file>
   <file datatype="xml" source-language="ja-JP" target-language="zh-Hans" original="POWERFULWINDSLICKEDBACKHAIR/WINDOWS/PIGEONPEEKF.RESX" tool-id="MultilingualAppToolkit" product-name="n/a" product-version="n/a" build-num="n/a">

@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using PowerfulWindSlickedBackHair.Properties;
+using System.Globalization;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x02000019 RID: 25
 	public partial class WalkingYukiForm : global::System.Windows.Forms.Form
@@ -28,7 +31,7 @@
             this.ClientSize = new System.Drawing.Size(279, 569);
             this.Name = "WalkingYukiForm";
             this.ShowIcon = false;
-            this.Text = "ペーシング。。。";
+            this.Text = Resources.ResourceManager.GetString("PowerfulWindButWindows", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

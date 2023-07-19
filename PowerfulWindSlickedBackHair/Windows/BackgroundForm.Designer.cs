@@ -1,4 +1,7 @@
-﻿namespace PowerfulWindSlickedBackHair.Windows
+﻿using System.Globalization;
+using PowerfulWindSlickedBackHair.Properties;
+
+namespace PowerfulWindSlickedBackHair.Windows
 {
 	// Token: 0x02000008 RID: 8
 	public partial class BackgroundForm : global::System.Windows.Forms.Form
@@ -43,7 +46,7 @@
             this.Controls.Add(this.text);
             this.Name = "BackgroundForm";
             this.ShowIcon = false;
-            this.Text = "バックグラウンド";
+            this.Text = Resource.ResourceManager.GetString("BackgroundTitle",CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}
