@@ -850,7 +850,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     if (num3 == 2523L)
                     {
                         if (!changedLeft)
-                            this.Left -= 400;
+                            this.Left -= 360;
                         changedLeft = true;
                         this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
                         this.text.TextAlign = ContentAlignment.MiddleLeft;
@@ -881,7 +881,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 if (num3 == 2818L)
                 {
                     if (!changedLeft2)
-                        this.Left += 400;
+                        this.Left += 360;
                     changedLeft2 = true;
                     this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
                     this.text.TextAlign = ContentAlignment.MiddleCenter;
