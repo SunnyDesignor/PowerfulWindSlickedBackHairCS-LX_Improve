@@ -33,7 +33,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.DoubleBuffered = true;
             this.Name = "RollingDogF";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("DogTitle", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("DogTitle", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

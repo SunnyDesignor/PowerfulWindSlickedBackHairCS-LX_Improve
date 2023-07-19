@@ -1,13 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
+using PowerfulWindSlickedBackHair.Properties;
 
 namespace PowerfulWindSlickedBackHair.Windows
 {
-	public partial class RollingDogF : Form
-	{
+    public partial class RollingDogF : Form
+    {
         private Bitmap dogWalk1;
 
         private Bitmap dogWalk2;
@@ -87,9 +89,9 @@ namespace PowerfulWindSlickedBackHair.Windows
                             {
                                 NotifyIcon notifyIcon = new NotifyIcon();
                                 notifyIcon.Visible = true;
-                                notifyIcon.BalloonTipText = "風がとても強いです!\r\n私の犬全体が吹き飛ばされようとしています!";
+                                notifyIcon.BalloonTipText = Resource.ResourceManager.GetString("NotificationsFromDogTitle", CultureInfo.CurrentCulture) + "\r\n" + Resource.ResourceManager.GetString("NotificationsFromDogText", CultureInfo.CurrentCulture);
                                 notifyIcon.Icon = new Icon("Assets\\Cross.ico");
-                                notifyIcon.ShowBalloonTip(1000, "風がとても強いです!", "私の犬全体が吹き飛ばされようとしています!", ToolTipIcon.Warning);
+                                notifyIcon.ShowBalloonTip(1000, Resource.ResourceManager.GetString("NotificationsFromDogTitle", CultureInfo.CurrentCulture), Resource.ResourceManager.GetString("NotificationsFromDogText", CultureInfo.CurrentCulture), ToolTipIcon.Warning);
                                 this.isShowMsg = false;
                             }
                             Bitmap bitmap = new Bitmap(dogRolling);

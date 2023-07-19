@@ -123,14 +123,22 @@
   <data name="DogTitle" xml:space="preserve">
     <value>犬</value>
   </data>
-  <data name="NotificationsFromDog" xml:space="preserve">
-    <value>風がとても強いです!\r\n私の犬全体が吹き飛ばされようとしています!</value>
+  <data name="LikeVideoText" xml:space="preserve">
+    <value>ご覧いただきありがとうございます
+好きになることを忘れないでください~</value>
+    <comment>这个怎么翻译啊（）</comment>
+  </data>
+  <data name="NotificationsFromDogText" xml:space="preserve">
+    <value>私の犬全体が吹き飛ばされようとしています!</value>
+  </data>
+  <data name="NotificationsFromDogTitle" xml:space="preserve">
+    <value>風がとても強いです!</value>
   </data>
   <data name="PacingTitle" xml:space="preserve">
     <value>ペーシング。。。</value>
   </data>
   <data name="PigeonsTitle" xml:space="preserve">
-    <value>鳩</value>
+    <value>ハト</value>
     <comment>翻译到中文就写“UP主”哈哈！</comment>
   </data>
   <data name="PowerfulWindButWindowsText" xml:space="preserve">
@@ -138,6 +146,10 @@
   </data>
   <data name="UnknownGreenSphereTitle" xml:space="preserve">
     <value>未知の緑色のボール</value>
+  </data>
+  <data name="UsedPluginsText" xml:space="preserve">
+    <value>プラグインの使用:
+NAudio SunnyUI</value>
   </data>
   <data name="WhistleTitle" xml:space="preserve">
     <value>口笛を吹く</value>

@@ -31,7 +31,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.ClientSize = new System.Drawing.Size(279, 569);
             this.Name = "WalkingYukiForm";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("PowerfulWindButWindows", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("PowerfulWindButWindows", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

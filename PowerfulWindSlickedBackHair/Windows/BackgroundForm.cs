@@ -854,7 +854,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                         changedLeft = true;
                         this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
                         this.text.TextAlign = ContentAlignment.MiddleLeft;
-                        this.text.Text = Resources.ResourceManager.GetString("PowerfulWindButWindowsText",CultureInfo.CurrentCulture);
+                        this.text.Text = Resource.ResourceManager.GetString("PowerfulWindButWindowsText",CultureInfo.CurrentCulture);
                     }
                 }
                 else
@@ -885,12 +885,12 @@ namespace PowerfulWindSlickedBackHair.Windows
                     changedLeft2 = true;
                     this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
                     this.text.TextAlign = ContentAlignment.MiddleCenter;
-                    this.text.Text = "ご覧いただきありがとうございます\r\n好きになることを忘れないでください~";
+                    this.text.Text = Resource.ResourceManager.GetString("LikeVideoText", CultureInfo.CurrentCulture);
                 }
             }
             else
             {
-                this.text.Text = "プラグインの使用:\r\nNAudio SunnyUI";
+                this.text.Text = Resource.ResourceManager.GetString("UsedPluginsText", CultureInfo.CurrentCulture);
             }
         }
 

@@ -8,8 +8,8 @@ using System.Security;
 using System.Security.Permissions;
 
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyTitle("强 风 大 窗 口")]
-[assembly: AssemblyDescription("强 风 大 窗 口")]
+[assembly: AssemblyTitle("強風オールバック")]
+[assembly: AssemblyDescription("強風オールバック")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CS-LX")]
 [assembly: AssemblyProduct("PowerfulWindSlickedBackHair")]

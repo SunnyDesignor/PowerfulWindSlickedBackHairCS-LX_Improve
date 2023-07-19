@@ -32,7 +32,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.DoubleBuffered = true;
             this.Name = "CabbageForm";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("PacingTitle", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("UnknownGreenSphereTitle", CultureInfo.CurrentCulture);
             this.Click += new System.EventHandler(this.CabbageForm_Click);
             this.ResumeLayout(false);
 

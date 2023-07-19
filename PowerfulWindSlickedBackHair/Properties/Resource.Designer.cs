@@ -79,11 +79,30 @@ namespace PowerfulWindSlickedBackHair.Properties {
         }
         
         /// <summary>
-        ///   查找类似 風がとても強いです!\r\n私の犬全体が吹き飛ばされようとしています! 的本地化字符串。
+        ///   查找类似 ご覧いただきありがとうございます
+        ///好きになることを忘れないでください~ 的本地化字符串。
         /// </summary>
-        internal static string NotificationsFromDog {
+        internal static string LikeVideoText {
             get {
-                return ResourceManager.GetString("NotificationsFromDog", resourceCulture);
+                return ResourceManager.GetString("LikeVideoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 私の犬全体が吹き飛ばされようとしています! 的本地化字符串。
+        /// </summary>
+        internal static string NotificationsFromDogText {
+            get {
+                return ResourceManager.GetString("NotificationsFromDogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 風がとても強いです! 的本地化字符串。
+        /// </summary>
+        internal static string NotificationsFromDogTitle {
+            get {
+                return ResourceManager.GetString("NotificationsFromDogTitle", resourceCulture);
             }
         }
         
@@ -97,7 +116,7 @@ namespace PowerfulWindSlickedBackHair.Properties {
         }
         
         /// <summary>
-        ///   查找类似 鳩 的本地化字符串。
+        ///   查找类似 ハト 的本地化字符串。
         /// </summary>
         internal static string PigeonsTitle {
             get {
@@ -120,6 +139,16 @@ namespace PowerfulWindSlickedBackHair.Properties {
         internal static string UnknownGreenSphereTitle {
             get {
                 return ResourceManager.GetString("UnknownGreenSphereTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 プラグインの使用:
+        ///NAudio SunnyUI 的本地化字符串。
+        /// </summary>
+        internal static string UsedPluginsText {
+            get {
+                return ResourceManager.GetString("UsedPluginsText", resourceCulture);
             }
         }
         

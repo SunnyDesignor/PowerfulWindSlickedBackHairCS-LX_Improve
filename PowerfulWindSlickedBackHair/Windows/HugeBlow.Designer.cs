@@ -32,7 +32,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.DoubleBuffered = true;
             this.Name = "HugeBlow";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("WhistleTitle", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("WhistleTitle", CultureInfo.CurrentCulture);
             this.Load += new System.EventHandler(this.HugeBlow_Load);
             this.ResumeLayout(false);
 

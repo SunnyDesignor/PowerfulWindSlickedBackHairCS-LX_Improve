@@ -33,7 +33,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.DoubleBuffered = true;
             this.Name = "StaticPigeonF";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("PigeonsTitle", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("PigeonsTitle", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

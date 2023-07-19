@@ -33,7 +33,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.MinimizeBox = false;
             this.Name = "DogWalkF";
             this.ShowIcon = false;
-            this.Text = Resources.ResourceManager.GetString("DogText", CultureInfo.CurrentCulture);
+            this.Text = Resource.ResourceManager.GetString("DogText", CultureInfo.CurrentCulture);
             this.ResumeLayout(false);
 
 		}

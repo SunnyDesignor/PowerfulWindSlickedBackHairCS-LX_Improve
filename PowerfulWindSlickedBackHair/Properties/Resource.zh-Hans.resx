@@ -123,8 +123,15 @@
   <data name="DogTitle" xml:space="preserve">
     <value>勾</value>
   </data>
-  <data name="NotificationsFromDog" xml:space="preserve">
-    <value>风力实在是太强了！\r\n我整条狗都快被吹飞了！</value>
+  <data name="LikeVideoText" xml:space="preserve">
+    <value>谢谢观看\r\n记得三连~</value>
+    <comment>这个怎么翻译啊（）</comment>
+  </data>
+  <data name="NotificationsFromDogText" xml:space="preserve">
+    <value>我整条狗都快被吹飞了！</value>
+  </data>
+  <data name="NotificationsFromDogTitle" xml:space="preserve">
+    <value>风力实在是太强了！</value>
   </data>
   <data name="PacingTitle" xml:space="preserve">
     <value>正在踱步...</value>
@@ -134,10 +141,15 @@
     <comment>翻译到中文就写“UP主”哈哈！</comment>
   </data>
   <data name="PowerfulWindButWindowsText" xml:space="preserve">
-    <value>強風オールバック\r\n但是Windows</value>
+    <value>強風オールバック
+但是Windows</value>
   </data>
   <data name="UnknownGreenSphereTitle" xml:space="preserve">
     <value>不明绿色球体</value>
+  </data>
+  <data name="UsedPluginsText" xml:space="preserve">
+    <value>使用插件：
+NAudio SunnyUI</value>
   </data>
   <data name="WhistleTitle" xml:space="preserve">
     <value>汽笛</value>
