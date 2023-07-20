@@ -11,7 +11,7 @@ using System.Security.Permissions;
 [assembly: AssemblyTitle("強風オールバック")]
 [assembly: AssemblyDescription("強風オールバック")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CS-LX")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PowerfulWindSlickedBackHair")]
 [assembly: AssemblyCopyright("Copyright © CS-LX & SunnyDesignor 2023")]
 [assembly: AssemblyTrademark("")]
