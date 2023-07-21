@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -887,7 +888,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             }
             else
             {
-                this.text.Text = "使用插件:\r\nNAudio SunnyUI";
+                this.text.Text = "使用插件:\r\nNAudio、SoundTouch";
             }
         }
 

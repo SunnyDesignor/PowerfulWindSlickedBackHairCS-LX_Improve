@@ -137,6 +137,8 @@ namespace PowerfulWindSlickedBackHair.Windows
             ShowDialog();
         }
 
+        float maxOpacity = 0.66f;
+
         private void UpdateF(long f)
         {
             switch (f)
@@ -147,7 +149,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 172L:
                     {
                         jumpSpace = 0.4f;
-                        base.Opacity = 1.0;
+                        base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread4 = new Thread(yukiMoveToRight);
                         thread4.Start();
@@ -161,7 +163,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 315L:
                     YukiState = YukiState.YellowBlow;
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 390L:
                     YukiState = YukiState.BlueBlow;
@@ -178,7 +180,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 1228L:
                     YukiState = YukiState.YellowNormal;
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 1371L:
                     base.Opacity = 0.0;
@@ -186,7 +188,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 1392L:
                     {
                         jumpSpace = 0.4f;
-                        base.Opacity = 1.0;
+                        base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread3 = new Thread(yukiMoveToRight);
                         thread3.Start();
@@ -200,14 +202,14 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 1685L:
                     YukiState = YukiState.YellowBlow;
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 1811L:
                     base.Opacity = 0.0;
                     break;
                 case 1874L:
                     YukiState = YukiState.YellowNormal;
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 1979L:
                     base.Opacity = 0.0;
@@ -215,7 +217,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 1998L:
                     {
                         jumpSpace = 0.4f;
-                        base.Opacity = 1.0;
+                        base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread2 = new Thread(yukiMoveToRight);
                         thread2.Start();
@@ -228,7 +230,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     jumpHeight = 1f;
                     break;
                 case 2151L:
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 2284L:
                     base.Opacity = 0.0;
@@ -236,7 +238,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 2304L:
                     {
                         jumpSpace = 0.4f;
-                        base.Opacity = 1.0;
+                        base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread = new Thread(yukiMoveToRight);
                         thread.Start();
@@ -250,7 +252,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 2523L:
                     YukiState = YukiState.YellowBlow;
-                    base.Opacity = 1.0;
+                    base.Opacity = maxOpacity;
                     break;
                 case 2817L:
                     base.Opacity = 0.0;

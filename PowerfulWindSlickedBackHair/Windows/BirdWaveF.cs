@@ -8,7 +8,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 {
     public partial class BirdWaveF : Form
     {
-        private bool isFlip;
+        //private bool isFlip;
 
         private Bitmap wave1;
 

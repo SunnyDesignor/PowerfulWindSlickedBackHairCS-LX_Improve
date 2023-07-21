@@ -93,6 +93,16 @@ namespace PowerfulWindSlickedBackHair.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap BlueError {
+            get {
+                object obj = ResourceManager.GetObject("BlueError", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap BWYuki {
             get {
                 object obj = ResourceManager.GetObject("BWYuki", resourceCulture);

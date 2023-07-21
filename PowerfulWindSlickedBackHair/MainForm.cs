@@ -1,14 +1,16 @@
-﻿using AxWMPLib;
+﻿using NAudio.Wave;
 using PowerfulWindSlickedBackHair.Tools;
 using PowerfulWindSlickedBackHair.Windows;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-
+using SoundTouch;
+using System.Collections.Generic;
 
 namespace PowerfulWindSlickedBackHair
 {
@@ -28,8 +30,8 @@ namespace PowerfulWindSlickedBackHair
 
         private JumpingYukiForm yukiForm;
 
-        private int offset = 3;
-        private double bgRate = 1;
+        private int offset = 40;
+        private float bgRate = 1;
         private int bgOffset = 0;
 
         private bool isSummonBackgroundForm;
@@ -46,6 +48,8 @@ namespace PowerfulWindSlickedBackHair
         {
             InitializeComponent();
             Control.CheckForIllegalCrossThreadCalls = false;
+
+
             Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
             base.Location = new Point(workingArea.Width - base.Size.Width, workingArea.Height - base.Size.Height);
             if (File.Exists("Offset.txt"))
@@ -54,7 +58,7 @@ namespace PowerfulWindSlickedBackHair
                 {
                     var array = File.ReadAllLines("Offset.txt");
                     offset = int.Parse(array[0].Split('：')[1]);
-                    bgRate = double.Parse(array[1].Split('：')[1]);
+                    bgRate = float.Parse(array[1].Split('：')[1]);
                     bgOffset = int.Parse(array[2].Split('：')[1]);
                 }
                 catch (Exception)
@@ -125,8 +129,6 @@ namespace PowerfulWindSlickedBackHair
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //CmdHelper.ExeCommand("taskkill /im cmd.exe /f");
-
             //最小化所有窗口
             IntPtr lHwnd = FindWindow("Shell_TrayWnd", "");
             SendMessage(lHwnd, WM_COMMAND, MIN_ALL, IntPtr.Zero);
@@ -150,7 +152,7 @@ namespace PowerfulWindSlickedBackHair
                     if (lastFrame != Tracker.frame)
                     {
                         lastFrame = Tracker.frame;
-                        frameLabel.Text = Tracker.frame.ToString();
+                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
                         Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
                         Thread.Sleep(num / 2);
                     }
@@ -211,27 +213,21 @@ namespace PowerfulWindSlickedBackHair
 
         }
 
+        SoundPlayer soundPlayer;
+
         void PlaySound()
         {
-            axWindowsMediaPlayer1.URL = "Assets\\Audio.mp3";
-            axWindowsMediaPlayer1.settings.volume = 100;
-            axWindowsMediaPlayer1.settings.rate = bgRate;
-            axWindowsMediaPlayer1.Ctlcontrols.play();
-            bool soundReady = false;
-            axWindowsMediaPlayer1.PlayStateChange += (_, eState) =>
-            {
-                if ((int)WMPLib.WMPPlayState.wmppsPlaying == eState.newState)
-                    soundReady = true;
-            };
-            while (!soundReady)
-                Thread.Sleep(1);
+            soundPlayer = new SoundPlayer();
+            soundPlayer.Load(@"Assets\Audio.mp3");
+            soundPlayer.Play();
+            soundPlayer.Rate = bgRate;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ChangeWallpaper(0);
             Tracker.StopAll();
-            axWindowsMediaPlayer1.close();
+            soundPlayer.Dispose();
             notifyIcon1.Visible = false;
             notifyIcon1.Dispose();
             ChangeWallpaper(0);
@@ -243,10 +239,10 @@ namespace PowerfulWindSlickedBackHair
             }).Start();
         }
 
+        bool blueScreenIsShow;
         private void Update(long f, Rectangle screen)
         {
             long num = f;
-
             //壁纸更新
             if (num == 60)
                 this.WindowState = FormWindowState.Minimized;
@@ -260,6 +256,18 @@ namespace PowerfulWindSlickedBackHair
                 ChangeWallpaper(1);
             else if (num >= 2870 && num < 2880)
                 ChangeWallpaper(0);
+            else if (num >= 2880 && num < 2890)
+            {
+                //蓝屏
+                if (blueScreenIsShow)
+                    return;
+                blueScreenIsShow = true;
+                new Thread(() =>
+                {
+                    BlueScreen blueScreen = new BlueScreen();
+                    blueScreen.ShowDialog();
+                }).Start();
+            }
             else if (num > 3000)
                 this.Close();
 
@@ -285,7 +293,7 @@ namespace PowerfulWindSlickedBackHair
             }
 
             long num3 = num2;
-            if (num3 < 9 || num3 >= 14)
+            if (num3 < 9 || num3 >= 24)
             {
                 switch (num2)
                 {

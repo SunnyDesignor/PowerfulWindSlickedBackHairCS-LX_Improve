@@ -12,6 +12,21 @@
     <FileAlignment>512</FileAlignment>
     <StartupObject>PowerfulWindSlickedBackHair.Program</StartupObject>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,7 +40,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,11 +56,16 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
@@ -74,6 +94,13 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SoundTouch\SoundPlayer.cs" />
+    <Compile Include="SoundTouch\SoundTouch.cs" />
+    <Compile Include="SoundTouch\SoundTouchInterop32.cs" />
+    <Compile Include="SoundTouch\SoundTouchInterop64.cs" />
+    <Compile Include="SoundTouch\SoundTouchProfile.cs" />
+    <Compile Include="SoundTouch\SoundTouchSettings.cs" />
+    <Compile Include="SoundTouch\VarispeedSampleProvider.cs" />
     <Compile Include="Tools\AnimalsShower.cs" />
     <Compile Include="Tools\BWYukiShower.cs" />
     <Compile Include="Tools\ClapYukiShower.cs" />
@@ -107,6 +134,12 @@
     </Compile>
     <Compile Include="Windows\BlackBirdF.Designer.cs">
       <DependentUpon>BlackBirdF.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\BlueScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\BlueScreen.Designer.cs">
+      <DependentUpon>BlueScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\BWYukiForm.cs">
       <SubType>Form</SubType>
@@ -222,8 +255,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\AhhhF.resx">
       <DependentUpon>AhhhF.cs</DependentUpon>
@@ -236,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\BlackBirdF.resx">
       <DependentUpon>BlackBirdF.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\BlueScreen.resx">
+      <DependentUpon>BlueScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\BWYukiForm.resx">
       <DependentUpon>BWYukiForm.cs</DependentUpon>
@@ -270,6 +306,9 @@
     <EmbeddedResource Include="Windows\StaticPigeonF.resx">
       <DependentUpon>StaticPigeonF.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\StaticYukiForm.resx">
+      <DependentUpon>StaticYukiForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\WalkingYukiForm.resx">
       <DependentUpon>WalkingYukiForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -286,6 +325,7 @@
     <None Include="Assets\font.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -384,6 +424,7 @@
     <Content Include="Assets\blue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\BlueError.png" />
     <Content Include="Assets\CabbageCut.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -460,16 +501,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="icon.ico" />
+    <Content Include="SoundTouch.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SoundTouch_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="AxWMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
     <COMReference Include="stdole">
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>2</VersionMajor>
@@ -479,18 +518,21 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-    <COMReference Include="WMPLib">
-      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

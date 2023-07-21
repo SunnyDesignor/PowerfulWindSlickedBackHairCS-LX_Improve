@@ -7,7 +7,7 @@ using System.Runtime.Versioning;
 using System.Security;
 using System.Security.Permissions;
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 [assembly: AssemblyTitle("强 风 大 窗 口")]
 [assembly: AssemblyDescription("强 风 大 窗 口")]
 [assembly: AssemblyConfiguration("")]
@@ -17,4 +17,4 @@ using System.Security.Permissions;
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("2ae3ee39-6b0a-4d0f-8bde-4bc89fe0c7ef")]
-[assembly: AssemblyFileVersion("1.1.2.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]

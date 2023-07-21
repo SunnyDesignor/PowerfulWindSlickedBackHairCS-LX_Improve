@@ -25,7 +25,7 @@ namespace PowerfulWindSlickedBackHair.Tools
 			process.StartInfo.RedirectStandardOutput = true;
 			process.StartInfo.RedirectStandardError = true;
 			process.StartInfo.CreateNoWindow = true;
-			string result = null;
+            string result = null;
 			try
 			{
 				process.Start();
