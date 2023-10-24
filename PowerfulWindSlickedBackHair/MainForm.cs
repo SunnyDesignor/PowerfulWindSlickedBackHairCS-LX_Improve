@@ -108,11 +108,11 @@ namespace PowerfulWindSlickedBackHair
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, currentWallpaper, 3);
                         break;
                     case 1:
-                        string whiteWallpaper = Application.StartupPath + "\\Assets\\yellow.png";
+                        string whiteWallpaper = Application.StartupPath + "\\Assets\\yellow.bmp";
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
                         break;
                     case 2:
-                        whiteWallpaper = Application.StartupPath + "\\Assets\\blue.png";
+                        whiteWallpaper = Application.StartupPath + "\\Assets\\blue.bmp";
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
                         break;
                 }
@@ -152,7 +152,7 @@ namespace PowerfulWindSlickedBackHair
                     if (lastFrame != Tracker.frame)
                     {
                         lastFrame = Tracker.frame;
-                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
+                        frameLabel.Text = string.Format("{0} | {1}", Tracker.frame, soundPlayer.CurrentTime);
                         Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
                         Thread.Sleep(num / 2);
                     }
@@ -189,23 +189,19 @@ namespace PowerfulWindSlickedBackHair
                 }
             });
 
-            void BeginWinDance()
-            {
-                thread.Start();
-                thread2.Start();
-            }
-
             new Thread(() =>
             {
                 if (bgOffset >= 0)
                 {
                     PlaySound();
                     Thread.Sleep(Math.Abs(bgOffset));
-                    BeginWinDance();
+                    thread.Start();
+                    thread2.Start();
                 }
                 else
                 {
-                    BeginWinDance();
+                    thread.Start();
+                    thread2.Start();
                     Thread.Sleep(Math.Abs(bgOffset));
                     PlaySound();
                 }

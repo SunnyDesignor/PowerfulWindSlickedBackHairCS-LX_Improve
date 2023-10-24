@@ -11,7 +11,7 @@ namespace SoundTouch
         private readonly bool is64Bit;
         public SoundTouch()
         {
-            is64Bit = Marshal.SizeOf<IntPtr>() == 8;
+            is64Bit = IntPtr.Size == 8;
             handle = is64Bit ? SoundTouchInterop64.soundtouch_createInstance() :
                 SoundTouchInterop32.soundtouch_createInstance();
         }
