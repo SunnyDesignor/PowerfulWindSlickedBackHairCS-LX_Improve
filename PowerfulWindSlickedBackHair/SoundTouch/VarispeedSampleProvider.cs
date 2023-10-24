@@ -79,7 +79,7 @@ namespace SoundTouch
             return samplesRead;
         }
 
-        public WaveFormat WaveFormat => sourceProvider.WaveFormat;
+        public WaveFormat WaveFormat{ get { return sourceProvider.WaveFormat; } }
 
         public float PlaybackRate
         {
