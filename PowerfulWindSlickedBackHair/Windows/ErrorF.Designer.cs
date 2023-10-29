@@ -25,19 +25,19 @@
             // 
             this.pictureBox1.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.Error;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(-17, -36);
+            this.pictureBox1.Location = new System.Drawing.Point(-2, -36);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(526, 218);
+            this.pictureBox1.Size = new System.Drawing.Size(394, 174);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // ErrorF
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.Error;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(488, 180);
+            this.ClientSize = new System.Drawing.Size(389, 133);
             this.Controls.Add(this.pictureBox1);
             this.DoubleBuffered = true;
             this.Name = "ErrorF";
