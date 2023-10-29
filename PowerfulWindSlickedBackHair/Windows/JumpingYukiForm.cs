@@ -42,6 +42,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         private int lastP = -1;
 
+        private float jumpSpace_static = 1f;
         private YukiState YukiState
         {
             get
@@ -52,6 +53,11 @@ namespace PowerfulWindSlickedBackHair.Windows
             {
                 state = value;
             }
+        }
+        public float JumpSpace
+        {
+            get { return jumpSpace; }
+            set { jumpSpace_static = value; jumpSpace = value; }
         }
 
         public JumpingYukiForm()
@@ -157,7 +163,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 235L:
                     base.Opacity = 0.0;
-                    jumpSpace = 1f;
+                    jumpSpace = jumpSpace_static;
                     jumpHeight = 1f;
                     base.Location = startLoc;
                     break;
@@ -196,7 +202,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 1454L:
                     base.Opacity = 0.0;
-                    jumpSpace = 1f;
+                    jumpSpace = jumpSpace_static;
                     base.Location = startLoc;
                     jumpHeight = 1f;
                     break;
@@ -225,7 +231,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 2062L:
                     base.Opacity = 0.0;
-                    jumpSpace = 1f;
+                    jumpSpace = jumpSpace_static;
                     base.Location = startLoc;
                     jumpHeight = 1f;
                     break;
@@ -247,7 +253,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 2369L:
                     base.Opacity = 0.0;
                     base.Location = startLoc;
-                    jumpSpace = 1f;
+                    jumpSpace = jumpSpace_static;
                     jumpHeight = 1f;
                     break;
                 case 2523L:

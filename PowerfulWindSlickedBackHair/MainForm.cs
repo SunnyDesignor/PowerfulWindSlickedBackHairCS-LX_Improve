@@ -33,6 +33,7 @@ namespace PowerfulWindSlickedBackHair
         private int offset = 40;
         private float bgRate = 1;
         private int bgOffset = 0;
+        private float jumpYukiForm_jumpSpace = 1f;
 
         private bool isSummonBackgroundForm;
 
@@ -60,6 +61,7 @@ namespace PowerfulWindSlickedBackHair
                     offset = int.Parse(array[0].Split('：')[1]);
                     bgRate = float.Parse(array[1].Split('：')[1]);
                     bgOffset = int.Parse(array[2].Split('：')[1]);
+                    jumpYukiForm_jumpSpace = float.Parse(array[3].Split('：')[1]);
                 }
                 catch (Exception)
                 {
@@ -644,6 +646,7 @@ namespace PowerfulWindSlickedBackHair
                 {
                     isSummonJumpingForm = true;
                     yukiForm = new JumpingYukiForm();
+                    yukiForm.JumpSpace = jumpYukiForm_jumpSpace;
                     yukiForm.ShowDialog(new Point(screen.Width / 2 - yukiForm.Width / 2, screen.Height / 2 - yukiForm.Height / 2), 2864);
                 });
                 thread23.Start();
