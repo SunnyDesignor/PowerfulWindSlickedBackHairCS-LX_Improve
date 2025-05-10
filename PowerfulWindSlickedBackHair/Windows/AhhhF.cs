@@ -27,6 +27,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 				do
 				{
 					flag = (Tracker.frame > (long)endFrame);
+					Thread.Sleep(1);
 				}
 				while (!flag);
 				this.Hide();

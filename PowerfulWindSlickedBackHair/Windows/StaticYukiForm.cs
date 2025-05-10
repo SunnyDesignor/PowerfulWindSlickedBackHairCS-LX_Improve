@@ -38,6 +38,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 int num = endFrame;
                 while (Tracker.frame <= endFrame)
                 {
+                    Thread.Sleep(5);
                 }
                 Hide();
                 thread2.Abort();

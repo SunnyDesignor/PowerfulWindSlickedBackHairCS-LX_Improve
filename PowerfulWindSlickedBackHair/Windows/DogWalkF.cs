@@ -24,7 +24,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 base.BackgroundImage = value;
                 if (base.IsHandleCreated)
                 {
-                    BeginInvoke((MethodInvoker)delegate
+                    Invoke((MethodInvoker)delegate
                     {
                         base.BackgroundImage = value;
                     });
@@ -38,6 +38,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             base.StartPosition = FormStartPosition.Manual;
             walk1 = new Bitmap("Assets\\DogWalk1.png");
             walk2 = new Bitmap("Assets\\DogWalk2.png");
+            //BackgroundImage = walk1;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value: true);
             UpdateStyles();
             base.TopMost = true;

@@ -21,6 +21,8 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.backColorB = Color.FromArgb(255, (int)this.backColorB.R, (int)this.backColorB.G, (int)this.backColorB.B);
             base.StartPosition = FormStartPosition.Manual;
             this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value: true);
+            UpdateStyles();
         }
 
         // Token: 0x0600001E RID: 30 RVA: 0x00003658 File Offset: 0x00001858
@@ -35,6 +37,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 {
                     this.UpdateText(Tracker.frame);
                     flag = (Tracker.frame > (long)endFrame);
+                    Thread.Sleep(5);
                 }
                 while (!flag);
                 this.Hide();

@@ -36,6 +36,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 					int num2 = (int)((PerlinNoise.Noise((float)Tracker.frame / 2f + 400f, (float)Tracker.frame / 2f + 510f, 0f) - 0.5f) * 80f);
 					this.Location = new Point(num + this.startLoc.X, num2 + this.startLoc.Y);
 					flag2 = (Tracker.frame > (long)endFrame);
+					Thread.Sleep(1);
 				}
 				while (!flag2);
 				this.Hide();

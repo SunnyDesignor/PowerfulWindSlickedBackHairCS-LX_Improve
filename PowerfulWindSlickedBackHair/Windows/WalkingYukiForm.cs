@@ -100,6 +100,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 {
                     double num2 = (double)(Tracker.frame - startFrame) / (double)sustainLength;
                     base.Location = new Point((int)((double)startLocation.X - num2 * (double)lastPosition), startLocation.Y);
+                    Thread.Sleep(1);
                 }
                 while (Tracker.frame <= endF);
                 thread2.Abort();

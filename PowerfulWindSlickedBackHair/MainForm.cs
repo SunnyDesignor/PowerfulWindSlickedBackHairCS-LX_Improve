@@ -134,27 +134,50 @@ namespace PowerfulWindSlickedBackHair
             SendMessage(lHwnd, WM_COMMAND, MIN_ALL, IntPtr.Zero);
             this.Focus();
 
-            Thread frameTracker = Tracker.AddThread("FrameTracker", delegate
+            int desiredIntervalMilliseconds = 80 - offset;
+
+            Thread frameTracker = Tracker.AddThread("FrameTracker", () =>
             {
-                int millisecondsTimeout = 80 - offset;
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                long ticksPerFrame = (long)desiredIntervalMilliseconds * TimeSpan.TicksPerMillisecond;
+                long lastScheduledTick = stopwatch.ElapsedTicks;
+                long nextScheduledTick = stopwatch.ElapsedTicks;
                 while (true)
                 {
                     Tracker.frame++;
-                    Thread.Sleep(millisecondsTimeout);
+                    nextScheduledTick += ticksPerFrame;
+                    long currentTimeTicks = stopwatch.ElapsedTicks;
+                    long waitTicks = nextScheduledTick - currentTimeTicks;
+                    if (waitTicks > 0)
+                    {
+                        int sleepMilliseconds = (int)(waitTicks / TimeSpan.TicksPerMillisecond);
+                        if (sleepMilliseconds > 0)
+                        {
+                            Thread.Sleep(sleepMilliseconds);
+                        }
+                        while (stopwatch.ElapsedTicks < nextScheduledTick)
+                        {
+                            Thread.Yield();
+                        }
+                    }
                 }
             });
+
             Thread thread = Tracker.AddThread("FrameUpdater", delegate
             {
-                int num = 80 - offset;
                 frameTracker.Start();
                 while (true)
                 {
                     if (lastFrame != Tracker.frame)
                     {
                         lastFrame = Tracker.frame;
-                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
+                        if (soundPlayer != null)
+                            frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
+                        else
+                            frameLabel.Text = $"{Tracker.frame} | Wait";
                         Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
-                        Thread.Sleep(num / 2);
+                        Thread.Sleep(10);
                     }
                 }
             });

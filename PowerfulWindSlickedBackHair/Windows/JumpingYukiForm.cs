@@ -94,10 +94,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             {
                 for (int i = 0; i < 1024; i++)
                 {
-                    Thread thread2 = new Thread((ThreadStart)delegate
-                    {
-                        SwitchBackgroundSecondly();
-                    });
+                    SwitchBackgroundSecondly();
                     Thread thread3 = new Thread((ThreadStart)delegate
                     {
                         float num2 = base.Location.Y;
@@ -113,7 +110,6 @@ namespace PowerfulWindSlickedBackHair.Windows
                             }
                         }
                     });
-                    thread2.Start();
                     if (canJump)
                     {
                         thread3.Start();
@@ -128,6 +124,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 do
                 {
                     UpdateF(Tracker.frame);
+                    Thread.Sleep(5);
                 }
                 while (Tracker.frame <= endFrame);
                 Hide();
