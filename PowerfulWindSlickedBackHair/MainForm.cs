@@ -33,6 +33,7 @@ namespace PowerfulWindSlickedBackHair
         private int offset = 40;
         private float bgRate = 1;
         private int bgOffset = 0;
+        private float jumpYukiForm_jumpSpace = 1f;
 
         private bool isSummonBackgroundForm;
 
@@ -60,6 +61,7 @@ namespace PowerfulWindSlickedBackHair
                     offset = int.Parse(array[0].Split('：')[1]);
                     bgRate = float.Parse(array[1].Split('：')[1]);
                     bgOffset = int.Parse(array[2].Split('：')[1]);
+                    jumpYukiForm_jumpSpace = float.Parse(array[3].Split('：')[1]);
                 }
                 catch (Exception)
                 {
@@ -108,11 +110,11 @@ namespace PowerfulWindSlickedBackHair
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, currentWallpaper, 3);
                         break;
                     case 1:
-                        string whiteWallpaper = Application.StartupPath + "\\Assets\\yellow.png";
+                        string whiteWallpaper = Application.StartupPath + "\\Assets\\yellow.bmp";
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
                         break;
                     case 2:
-                        whiteWallpaper = Application.StartupPath + "\\Assets\\blue.png";
+                        whiteWallpaper = Application.StartupPath + "\\Assets\\blue.bmp";
                         SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
                         break;
                 }
@@ -172,10 +174,7 @@ namespace PowerfulWindSlickedBackHair
                     if (lastFrame != Tracker.frame)
                     {
                         lastFrame = Tracker.frame;
-                        if (soundPlayer != null)
-                            frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
-                        else
-                            frameLabel.Text = $"{Tracker.frame} | Wait";
+                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
                         Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
                         Thread.Sleep(10);
                     }
@@ -212,23 +211,19 @@ namespace PowerfulWindSlickedBackHair
                 }
             });
 
-            void BeginWinDance()
-            {
-                thread.Start();
-                thread2.Start();
-            }
-
             new Thread(() =>
             {
                 if (bgOffset >= 0)
                 {
                     PlaySound();
                     Thread.Sleep(Math.Abs(bgOffset));
-                    BeginWinDance();
+                    thread.Start();
+                    thread2.Start();
                 }
                 else
                 {
-                    BeginWinDance();
+                    thread.Start();
+                    thread2.Start();
                     Thread.Sleep(Math.Abs(bgOffset));
                     PlaySound();
                 }
@@ -671,6 +666,7 @@ namespace PowerfulWindSlickedBackHair
                 {
                     isSummonJumpingForm = true;
                     yukiForm = new JumpingYukiForm();
+                    yukiForm.JumpSpace = jumpYukiForm_jumpSpace;
                     yukiForm.ShowDialog(new Point(screen.Width / 2 - yukiForm.Width / 2, screen.Height / 2 - yukiForm.Height / 2), 2864);
                 });
                 thread23.Start();

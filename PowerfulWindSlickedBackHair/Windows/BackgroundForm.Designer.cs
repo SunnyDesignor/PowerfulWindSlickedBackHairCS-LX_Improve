@@ -28,7 +28,7 @@
             this.text.Location = new System.Drawing.Point(0, 0);
             this.text.Margin = new System.Windows.Forms.Padding(0);
             this.text.Name = "text";
-            this.text.Size = new System.Drawing.Size(1120, 576);
+            this.text.Size = new System.Drawing.Size(1104, 537);
             //this.text.Style = Sunny.UI.UIStyle.Custom;
             this.text.TabIndex = 0;
             this.text.Text = "外出た瞬間";
@@ -36,10 +36,10 @@
             // 
             // BackgroundForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gold;
-            this.ClientSize = new System.Drawing.Size(1120, 576);
+            this.ClientSize = new System.Drawing.Size(1104, 537);
             this.Controls.Add(this.text);
             this.Name = "BackgroundForm";
             this.ShowIcon = false;

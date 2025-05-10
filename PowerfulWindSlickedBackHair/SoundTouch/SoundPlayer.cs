@@ -29,8 +29,8 @@ namespace SoundTouch
 
         public void Load(string path)
         {
-            reader?.Dispose();
-            speedControl?.Dispose();
+            if(reader != null) { reader.Dispose(); }
+            if(speedControl != null) { speedControl.Dispose(); }
             reader = null;
             speedControl = null;
             reader = new AudioFileReader(path);
@@ -49,14 +49,14 @@ namespace SoundTouch
 
         public void Pause()
         {
-            wavePlayer?.Stop();
+            if(wavePlayer != null) { wavePlayer.Stop(); }
         }
 
         public void Dispose()
         {
-            wavePlayer?.Dispose();
-            speedControl?.Dispose();
-            reader?.Dispose();
+            if(wavePlayer != null) { wavePlayer.Dispose(); }
+            if(speedControl != null) { speedControl.Dispose(); }
+            if(reader != null) { reader.Dispose(); }
         }
     }
 }
