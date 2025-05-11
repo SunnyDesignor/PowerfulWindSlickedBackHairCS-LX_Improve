@@ -17,17 +17,33 @@ namespace PowerfulWindSlickedBackHair.Windows
         {
             get
             {
+                if (this.IsDisposed) return null;
+                if (InvokeRequired)
+                {
+                    return (Image)Invoke(new Func<Image>(() => base.BackgroundImage));
+                }
                 return base.BackgroundImage;
             }
             set
             {
-                base.BackgroundImage = value;
-                if (base.IsHandleCreated)
+                if (IsDisposed)
+                    return;
+                if (InvokeRequired)
                 {
-                    Invoke((MethodInvoker)delegate
+                    BeginInvoke((MethodInvoker)delegate
                     {
+                        if (IsDisposed || !IsHandleCreated)
+                            return;
+                        Image oldImage = base.BackgroundImage;
                         base.BackgroundImage = value;
                     });
+                }
+                else
+                {
+                    if (IsDisposed || !IsHandleCreated)
+                        return;
+                    Image oldImage = base.BackgroundImage;
+                    base.BackgroundImage = value;
                 }
             }
         }

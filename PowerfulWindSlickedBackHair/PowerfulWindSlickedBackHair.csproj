@@ -107,7 +107,9 @@
     <Compile Include="Tools\BWYukiShower.cs" />
     <Compile Include="Tools\ClapYukiShower.cs" />
     <Compile Include="Tools\CmdHelper.cs" />
+    <Compile Include="Tools\Logger.cs" />
     <Compile Include="Tools\Mathf.cs" />
+    <Compile Include="Tools\Win32APIHelper.cs" />
     <Compile Include="Tools\PerlinNoise.cs" />
     <Compile Include="Tools\RollingDogShower.cs" />
     <Compile Include="Tools\WaveBirdShower.cs" />
@@ -425,7 +427,7 @@
     <Content Include="Assets\blue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\BlueError.png" />
+    <Content Include="Assets\blueQRCode.png" />
     <Content Include="Assets\CabbageCut.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -501,13 +503,13 @@
     <Content Include="Assets\YukiClap2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Include="Assets\yellow.bmp">
+    <Content Include="Assets\yellow.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Include="Assets\blue.bmp">
+    <Content Include="Assets\blue.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-	<Content Include="Offset.txt">
+    <Content Include="Offset.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="icon.ico" />
@@ -517,7 +519,7 @@
     <Content Include="SoundTouch_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="NAudio.dll">
+    <Content Include="NAudio.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

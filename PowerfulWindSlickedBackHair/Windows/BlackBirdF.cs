@@ -41,7 +41,10 @@ namespace PowerfulWindSlickedBackHair.Windows
 					}
 					Thread.Sleep(1);
 				}
-				this.hitThread.Abort();
+				if(hitThread.ThreadState == ThreadState.Running)
+                {
+                    this.hitThread.Abort();
+                }
 				this.Hide();
 			});
 			thread.Start();
@@ -104,7 +107,6 @@ namespace PowerfulWindSlickedBackHair.Windows
 					if (flag3)
 					{
 						this.pictureBox1.BackgroundImage = this.b2;
-						Console.WriteLine(this.hitF[i]);
 						i++;
 						Thread.Sleep(50);
 						this.pictureBox1.BackgroundImage = this.b1;

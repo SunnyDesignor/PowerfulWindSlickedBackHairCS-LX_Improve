@@ -117,4 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label5.Text" xml:space="preserve">
+    <value>A problem has been detected and windows has been shutdown to prevent damage to your computer.
+
+STRONG_WINDS_DESTROYED_WINDOWS
+
+If this is the first time you've seen this error screen, restart your computer. if this screen appears again. follow these steps:
+
+Check to make sure any hardware or software is properly installed.
+If this is a new installation. ask your hardware or software manufacturer for any windows updates you might need.
+
+If problems continue, disable or remove any newly installed hardware or software. Disable BIOS memory options such as caching or shadowing.
+If you need to use Safe Mode to remove or disable components, restart your computer, press F8 to select Advanced Startup Options, and then
+select Safe Mode.
+
+Technical information:
+
+*** STOP: 0x000000FE (0x00000008, 0x000000006, 0x00000009, 0x847075cc)
+
+Collecting data for crash dump...
+Initializing disk for crash dump...
+Beginning dump of physical memory.
+
+Physical memory dump complete.
+Contact your system administator or technical support group for further assistance.</value>
+  </data>
 </root>

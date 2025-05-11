@@ -26,6 +26,7 @@
             this.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.Ahhhh;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(254, 458);
+            this.DoubleBuffered = true;
             this.Name = "AhhhF";
             this.ShowIcon = false;
             this.Text = "Ahhhh";

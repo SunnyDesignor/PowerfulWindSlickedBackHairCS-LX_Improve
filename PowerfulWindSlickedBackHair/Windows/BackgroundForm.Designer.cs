@@ -28,22 +28,25 @@
             this.text.Location = new System.Drawing.Point(0, 0);
             this.text.Margin = new System.Windows.Forms.Padding(0);
             this.text.Name = "text";
-            this.text.Size = new System.Drawing.Size(1104, 537);
-            //this.text.Style = Sunny.UI.UIStyle.Custom;
+            this.text.Size = new System.Drawing.Size(1422, 673);
             this.text.TabIndex = 0;
             this.text.Text = "外出た瞬間";
             this.text.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // BackgroundForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Gold;
-            this.ClientSize = new System.Drawing.Size(1104, 537);
+            this.ClientSize = new System.Drawing.Size(1422, 673);
             this.Controls.Add(this.text);
+            this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "BackgroundForm";
             this.ShowIcon = false;
             this.Text = "背景呐";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BackgroundForm_FormClosed);
             this.ResumeLayout(false);
 
 		}

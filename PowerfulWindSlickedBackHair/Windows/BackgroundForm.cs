@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -21,8 +22,6 @@ namespace PowerfulWindSlickedBackHair.Windows
             this.backColorB = Color.FromArgb(255, (int)this.backColorB.R, (int)this.backColorB.G, (int)this.backColorB.B);
             base.StartPosition = FormStartPosition.Manual;
             this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value: true);
-            UpdateStyles();
         }
 
         // Token: 0x0600001E RID: 30 RVA: 0x00003658 File Offset: 0x00001858
@@ -37,7 +36,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 {
                     this.UpdateText(Tracker.frame);
                     flag = (Tracker.frame > (long)endFrame);
-                    Thread.Sleep(5);
+                    Thread.Sleep(1);
                 }
                 while (!flag);
                 this.Hide();
@@ -171,6 +170,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                                 }
                                 else
                                 {
+                                    this.Text = $"背景呐（版本：{Assembly.GetExecutingAssembly().GetName().Version}  作者：CS-LX、SunnyDesignor）";
                                     this.text.Text = "";
                                 }
                             }
@@ -204,6 +204,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                         }
                         else
                         {
+                            this.Text = $"背景呐";
                             this.BackColor = this.backColorB;
                         }
                     }
@@ -869,12 +870,12 @@ namespace PowerfulWindSlickedBackHair.Windows
                 {
                     if (num3 == 2677L)
                     {
-                        this.text.Text = "改: LX\r\n显示: winform\r\n\n反编译/补充功能：\nGithub.com/SunnyDesignor";
+                        this.text.Text = "程序作者: https://github.com/CS-LX\r\n开发框架: Winform .Net C#\r\n\r\n反编译恢复/功能改进 开发者：\r\nhttps://Github.com/SunnyDesignor";
                     }
                 }
                 else
                 {
-                    this.text.Text = "原: https://youtu.be/D6DVTLvOupE\r\n";
+                    this.text.Text = "动画MV原视频:\n https://youtu.be/D6DVTLvOupE";
                 }
             }
             else if (num3 != 2753L)
@@ -891,7 +892,7 @@ namespace PowerfulWindSlickedBackHair.Windows
             }
             else
             {
-                this.text.Text = "使用插件:\r\nNAudio、SoundTouch";
+                this.text.Text = "使用的开源项目:\r\nNAudio、SoundTouch";
             }
         }
 
@@ -902,5 +903,10 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         // Token: 0x0400001B RID: 27
         private Color backColorB;
+
+        private void BackgroundForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MainForm.Instance?.Close();
+        }
     }
 }

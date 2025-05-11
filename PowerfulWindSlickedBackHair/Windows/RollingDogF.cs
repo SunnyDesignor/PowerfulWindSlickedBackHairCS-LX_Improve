@@ -6,8 +6,8 @@ using System.Windows.Forms;
 
 namespace PowerfulWindSlickedBackHair.Windows
 {
-	public partial class RollingDogF : Form
-	{
+    public partial class RollingDogF : Form
+    {
         private Bitmap dogWalk1;
 
         private Bitmap dogWalk2;
@@ -32,17 +32,33 @@ namespace PowerfulWindSlickedBackHair.Windows
         {
             get
             {
+                if (this.IsDisposed) return null;
+                if (InvokeRequired)
+                {
+                    return (Image)Invoke(new Func<Image>(() => base.BackgroundImage));
+                }
                 return base.BackgroundImage;
             }
             set
             {
-                base.BackgroundImage = value;
-                if (base.IsHandleCreated)
+                if (IsDisposed)
+                    return;
+                if (InvokeRequired)
                 {
                     BeginInvoke((MethodInvoker)delegate
                     {
+                        if (IsDisposed || !IsHandleCreated)
+                            return;
+                        Image oldImage = base.BackgroundImage;
                         base.BackgroundImage = value;
                     });
+                }
+                else
+                {
+                    if (IsDisposed || !IsHandleCreated)
+                        return;
+                    Image oldImage = base.BackgroundImage;
+                    base.BackgroundImage = value;
                 }
             }
         }
@@ -74,7 +90,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 long num = endF;
                 Thread thread2 = new Thread((ThreadStart)delegate
                 {
-                    while (true)
+                    while (Tracker.Running)
                     {
                         if (Tracker.frame < switchF)
                         {
@@ -102,7 +118,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 });
                 thread2.Start();
-                while (true)
+                while (Tracker.Running)
                 {
                     double num2 = (double)(Tracker.frame - startFrame) / (double)sustainLength;
                     base.Location = new Point((int)((double)startLocation.X + num2 * (double)lastPosition), startLocation.Y);
@@ -110,10 +126,13 @@ namespace PowerfulWindSlickedBackHair.Windows
                     {
                         break;
                     }
+                    MainForm.WindSpeed = 5;
                     Thread.Sleep(1);
                 }
+                MainForm.WindSpeed = 1;
                 Hide();
-                thread2.Abort();
+                if (thread2.IsAlive)
+                    thread2.Abort();
             });
             thread.Start();
             ShowDialog();

@@ -11,6 +11,8 @@ using System.Threading;
 using System.Windows.Forms;
 using SoundTouch;
 using System.Collections.Generic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+using System.Security.Policy;
 
 namespace PowerfulWindSlickedBackHair
 {
@@ -30,26 +32,23 @@ namespace PowerfulWindSlickedBackHair
 
         private JumpingYukiForm yukiForm;
 
-        private int offset = 40;
-        private float bgRate = 1;
-        private int bgOffset = 0;
-        private float jumpYukiForm_jumpSpace = 1f;
+        private readonly float SpeedRate = 1;
+        private readonly float BGMSpeedRate = 1;
+        private readonly int BGMOffset = 0;
 
         private bool isSummonBackgroundForm;
-
         private bool isSummonJumpingForm;
-
         private bool isBWYuki = false;
-
         private bool isFloatWindow = false;
+        public static int WindSpeed = 1;
 
-        private long lastFrame = -1L;
+        public static MainForm Instance;
 
         public MainForm()
         {
             InitializeComponent();
             Control.CheckForIllegalCrossThreadCalls = false;
-
+            Instance = this;
 
             Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
             base.Location = new Point(workingArea.Width - base.Size.Width, workingArea.Height - base.Size.Height);
@@ -58,10 +57,24 @@ namespace PowerfulWindSlickedBackHair
                 try
                 {
                     var array = File.ReadAllLines("Offset.txt");
-                    offset = int.Parse(array[0].Split('：')[1]);
-                    bgRate = float.Parse(array[1].Split('：')[1]);
-                    bgOffset = int.Parse(array[2].Split('：')[1]);
-                    jumpYukiForm_jumpSpace = float.Parse(array[3].Split('：')[1]);
+                    SpeedRate = float.Parse(array[0].Split('：')[1]);
+                    BGMSpeedRate = float.Parse(array[1].Split('：')[1]);
+                    BGMOffset = int.Parse(array[2].Split('：')[1]);
+
+                    if (SpeedRate > 2)
+                        SpeedRate = 2f;
+                    else if (SpeedRate < 0.5)
+                        SpeedRate = 0.5f;
+
+                    if (BGMSpeedRate > 2)
+                        BGMSpeedRate = 2f;
+                    else if (BGMSpeedRate < 0.5)
+                        BGMSpeedRate = 0.5f;
+
+                    if (BGMOffset > 2000)
+                        BGMOffset = 2000;
+                    else if (BGMOffset < -2000)
+                        BGMOffset = 2000;
                 }
                 catch (Exception)
                 {
@@ -69,9 +82,7 @@ namespace PowerfulWindSlickedBackHair
             }
             LoadFonts();
 
-            SystemParametersInfo(SPI_GETDESKWALLPAPER, currentWallpaper.Length, currentWallpaper, 0);
-            currentWallpaper = currentWallpaper.Substring(0, currentWallpaper.IndexOf('\0'));
-            ChangeWallpaper(1);
+            Win32APIHelper.ChangeWallpaper(1);
         }
 
         public static PrivateFontCollection otherFont = new PrivateFontCollection();
@@ -87,67 +98,71 @@ namespace PowerfulWindSlickedBackHair
             }
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
-        // 定义常量
-        private const int SPI_GETDESKWALLPAPER = 0x0073;
-        private const int SPI_SETDESKWALLPAPER = 0x0014;
-        static string currentWallpaper = new string('\0', 260);
-        static int oldType = 0;
-        /// <summary>
-        /// 设置壁纸    0恢复原来的桌面壁纸  1纯色黄  2纯色蓝
-        /// </summary>
-        public static void ChangeWallpaper(int type)
-        {
-            if (type == oldType)
-                return;
-            oldType = type;
-            new Thread(() =>
-            {
-                switch (type)
-                {
-                    case 0:
-                        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, currentWallpaper, 3);
-                        break;
-                    case 1:
-                        string whiteWallpaper = Application.StartupPath + "\\Assets\\yellow.bmp";
-                        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
-                        break;
-                    case 2:
-                        whiteWallpaper = Application.StartupPath + "\\Assets\\blue.bmp";
-                        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, whiteWallpaper, 3);
-                        break;
-                }
-            }).Start();
-        }
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, IntPtr lParam);
-        [DllImport("user32.dll")]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        const int WM_COMMAND = 0x111; // 命令的消息
-        const int MIN_ALL = 419; // 最小化所有窗口的命令
-
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //最小化所有窗口
-            IntPtr lHwnd = FindWindow("Shell_TrayWnd", "");
-            SendMessage(lHwnd, WM_COMMAND, MIN_ALL, IntPtr.Zero);
+            Win32APIHelper.MinimizeAllWindows();
             this.Focus();
+            Tracker.Running = true;
 
-            int desiredIntervalMilliseconds = 80 - offset;
 
             Thread frameTracker = Tracker.AddThread("FrameTracker", () =>
             {
+                Tracker.AddAndStartThread("ListView", () =>
+                {
+                    while (Tracker.Running)
+                    {
+                        if (!isCursorPressOnListView && Tracker.frame % 2 == 0)
+                        {
+                            threadsList.Items.Clear();
+                            try
+                            {
+                                lock (Tracker.threads)
+                                {
+                                    Tracker.threads.RemoveAll(t => t.IsAlive == false);
+                                }
+                                foreach (Thread thread3 in Tracker.threads)
+                                {
+                                    try
+                                    {
+                                        ListViewItem listViewItem = threadsList.Items.Add(thread3.Name);
+                                        listViewItem.SubItems.Add(thread3.ThreadState.ToString());
+                                    }
+                                    catch (Exception)
+                                    {
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                        Thread.Sleep(100);
+                    }
+                });
+                Tracker.AddAndStartThread("Cursor", () =>
+                {
+                    while (Tracker.Running && Tracker.frame < 2880)
+                    {
+                        var point = Cursor.Position;
+                        Cursor.Position = new Point(point.X + WindSpeed, point.Y);
+                        Thread.Sleep(1);
+                    }
+                });
+
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                long ticksPerFrame = (long)desiredIntervalMilliseconds * TimeSpan.TicksPerMillisecond;
+                long ticksPerFrame = (long)(466667 / SpeedRate);
                 long lastScheduledTick = stopwatch.ElapsedTicks;
                 long nextScheduledTick = stopwatch.ElapsedTicks;
-                while (true)
+                while (Tracker.Running)
                 {
                     Tracker.frame++;
+                    Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
+                    if (soundPlayer != null)
+                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
+                    else
+                        frameLabel.Text = $"{Tracker.frame} | Wait";
+
                     nextScheduledTick += ticksPerFrame;
                     long currentTimeTicks = stopwatch.ElapsedTicks;
                     long waitTicks = nextScheduledTick - currentTimeTicks;
@@ -166,65 +181,18 @@ namespace PowerfulWindSlickedBackHair
                 }
             });
 
-            Thread thread = Tracker.AddThread("FrameUpdater", delegate
-            {
-                frameTracker.Start();
-                while (true)
-                {
-                    if (lastFrame != Tracker.frame)
-                    {
-                        lastFrame = Tracker.frame;
-                        frameLabel.Text = $"{Tracker.frame} | {soundPlayer.CurrentTime}";
-                        Update(Tracker.frame, Screen.PrimaryScreen.WorkingArea);
-                        Thread.Sleep(10);
-                    }
-                }
-            });
-            Thread thread2 = Tracker.AddThread("ThreadsShower", delegate
-            {
-                while (true)
-                {
-                    if (!isCursorPressOnListView)
-                    {
-                        threadsList.Items.Clear();
-                        try
-                        {
-                            foreach (Thread thread3 in Tracker.threads)
-                            {
-                                try
-                                {
-                                    string name = thread3.Name;
-                                    bool isAlive = thread3.IsAlive;
-                                    ListViewItem listViewItem = threadsList.Items.Add(name);
-                                    listViewItem.SubItems.Add(thread3.ThreadState.ToString());
-                                }
-                                catch (Exception)
-                                {
-                                }
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        Thread.Sleep(100);
-                    }
-                }
-            });
-
             new Thread(() =>
             {
-                if (bgOffset >= 0)
+                if (BGMOffset >= 0)
                 {
                     PlaySound();
-                    Thread.Sleep(Math.Abs(bgOffset));
-                    thread.Start();
-                    thread2.Start();
+                    Thread.Sleep(Math.Abs(BGMOffset));
+                    frameTracker.Start();
                 }
                 else
                 {
-                    thread.Start();
-                    thread2.Start();
-                    Thread.Sleep(Math.Abs(bgOffset));
+                    frameTracker.Start();
+                    Thread.Sleep(Math.Abs(BGMOffset));
                     PlaySound();
                 }
             }).Start();
@@ -238,23 +206,28 @@ namespace PowerfulWindSlickedBackHair
             soundPlayer = new SoundPlayer();
             soundPlayer.Load(@"Assets\Audio.mp3");
             soundPlayer.Play();
-            soundPlayer.Rate = bgRate;
+            soundPlayer.Rate = BGMSpeedRate;
         }
 
+        bool isClose = false;
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ChangeWallpaper(0);
+            if (isClose) return;
+            Win32APIHelper.CanChangeWallpaper = false;
+            Win32APIHelper.ChangeWallpaper(0);
+            Tracker.Running = false;
             Tracker.StopAll();
-            soundPlayer.Dispose();
             notifyIcon1.Visible = false;
             notifyIcon1.Dispose();
-            ChangeWallpaper(0);
-            //CmdHelper.ExeCommand("taskkill /im PowerfulWindSlickedBackHair.exe /f");
+            soundPlayer?.Dispose();
+            isClose = true;
+            Application.Exit();
             new Thread(() =>
             {
                 Thread.Sleep(1500);
                 Environment.Exit(0);
-            }).Start();
+            })
+            { IsBackground = true }.Start();
         }
 
         bool blueScreenIsShow;
@@ -264,33 +237,46 @@ namespace PowerfulWindSlickedBackHair
             //壁纸更新
             if (num == 60)
                 this.WindowState = FormWindowState.Minimized;
-            else if (num >= 387 && num < 464)
-                ChangeWallpaper(2);
-            else if (num >= 464 && num < 542)
-                ChangeWallpaper(1);
-            else if (num >= 542 && num < 616)
-                ChangeWallpaper(2);
-            else if (num >= 616 && num < 630)
-                ChangeWallpaper(1);
+            else if (num >= 389 && num < 466)
+                Win32APIHelper.ChangeWallpaper(2);
+            else if (num >= 466 && num < 541)
+                Win32APIHelper.ChangeWallpaper(1);
+            else if (num >= 541 && num < 618)
+                Win32APIHelper.ChangeWallpaper(2);
+            else if (num >= 618 && num < 630)
+                Win32APIHelper.ChangeWallpaper(1);
             else if (num >= 2870 && num < 2880)
-                ChangeWallpaper(0);
+                Win32APIHelper.ChangeWallpaper(0);
             else if (num >= 2880 && num < 2890)
             {
                 //蓝屏
                 if (blueScreenIsShow)
                     return;
                 blueScreenIsShow = true;
-                new Thread(() =>
+                Tracker.AddAndStartThread("Blue", () =>
                 {
                     BlueScreen blueScreen = new BlueScreen();
                     blueScreen.ShowDialog();
-                }).Start();
+                });
             }
-            else if (num > 3000)
+            else if (num > 3090)
+            {
+                try
+                {
+                    var result = MessageBox.Show(Text = "如果觉得好玩，欢迎给项目Star、B站点赞 收藏 关注！\n\n如果你有任何问题或建议，请在评论区留言！", "感谢使用", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    if (result == DialogResult.OK)
+                    {
+                        Process.Start(new ProcessStartInfo("https://space.bilibili.com/286746249") { UseShellExecute = true });
+                        Process.Start(new ProcessStartInfo("https://www.bilibili.com/video/BV1Kz4y1p7sz") { UseShellExecute = true });
+                    }
+                }
+                catch (Exception)
+                {
+                }
                 this.Close();
+            }
 
             long num2 = num;
-
             if (num2 > 3 && num2 < 8)
             {
                 if (isSummonBackgroundForm)
@@ -326,60 +312,54 @@ namespace PowerfulWindSlickedBackHair
                         return;
                     case 234L:
                         {
-                            Thread thread6 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("StaticYukiForm1", delegate
                             {
                                 StaticYukiForm staticYukiForm10 = new StaticYukiForm();
                                 staticYukiForm10.ShowDialog(new Point(screen.Width / 2 - staticYukiForm10.Width / 2 - 400, screen.Height / 2 - staticYukiForm10.Height / 2), 269);
                             });
-                            thread6.Start();
                             return;
                         }
                     case 244L:
                         {
-                            Thread thread5 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("StaticYukiForm2", delegate
                             {
                                 StaticYukiForm staticYukiForm11 = new StaticYukiForm();
                                 staticYukiForm11.ShowDialog(new Point(screen.Width / 2 - staticYukiForm11.Width / 2, screen.Height / 2 - staticYukiForm11.Height / 2), 269);
                             });
-                            thread5.Start();
                             return;
                         }
                     case 254L:
                         {
-                            Thread thread4 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("StaticYukiForm3", delegate
                             {
                                 StaticYukiForm staticYukiForm12 = new StaticYukiForm();
                                 staticYukiForm12.ShowDialog(new Point(screen.Width / 2 - staticYukiForm12.Width / 2 + 400, screen.Height / 2 - staticYukiForm12.Height / 2), 269);
                             });
-                            thread4.Start();
                             return;
                         }
                     case 315L:
                         {
-                            Thread thread2 = Tracker.AddThread("BlackBirdShower", delegate
+                            Tracker.AddAndStartThread("blackBirdF", delegate
                             {
                                 BlackBirdF blackBirdF = new BlackBirdF();
                                 Point point2 = new Point(screen.Width / 2 - blackBirdF.Width / 2, screen.Height / 2 - blackBirdF.Height);
                                 blackBirdF.ShowDialog(new Point(point2.X - 500, point2.Y + 400), 619);
                             });
-                            thread2.Start();
-                            Thread thread3 = Tracker.AddThread("WhiteBirdShower", delegate
+                            Tracker.AddAndStartThread("whiteBirdF", delegate
                             {
                                 WhiteBirdF whiteBirdF = new WhiteBirdF();
                                 Point point = new Point(screen.Width / 2 - whiteBirdF.Width / 2, screen.Height / 2 - whiteBirdF.Height);
                                 whiteBirdF.ShowDialog(new Point(point.X + 500, point.Y + 400), 619);
                             });
-                            thread3.Start();
                             return;
                         }
                     case 619L:
                         {
-                            Thread thread7 = Tracker.AddThread("WalkingYuki", delegate
+                            Tracker.AddAndStartThread("WalkingYuki", delegate
                             {
                                 WalkingYukiForm walkingYukiForm = new WalkingYukiForm();
                                 walkingYukiForm.ShowDialog(new Point(screen.Width - walkingYukiForm.Width, screen.Height / 2 - walkingYukiForm.Height / 2), 1151, 300);
                             });
-                            thread7.Start();
                             return;
                         }
                     case 811L:
@@ -402,12 +382,11 @@ namespace PowerfulWindSlickedBackHair
                         return;
                     case 1184L:
                         {
-                            Thread thread13 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("fightForm", delegate
                             {
                                 FightForm fightForm = new FightForm();
                                 fightForm.ShowDialog(1211L);
                             });
-                            thread13.Start();
                             return;
                         }
                     case 1212L:
@@ -427,13 +406,12 @@ namespace PowerfulWindSlickedBackHair
                                 int i;
                                 for (i = 0; i < 6; i++)
                                 {
-                                    Thread thread24 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("ErrorF", delegate
                                     {
                                         ErrorF errorF = new ErrorF();
-                                        errorF.ShowDialog(new Point(screen.Width / 2 - errorF.Width / 2 - i * 40, screen.Height / 2 - errorF.Height / 2 + i * 30), 1246);
+                                        errorF.ShowDialog(new Point(screen.Width / 2 - errorF.Width / 2 - i * 40, screen.Height / 2 - errorF.Height / 2 + i * 30), 1230);
                                     });
-                                    thread24.Start();
-                                    Thread.Sleep(70);
+                                    Thread.Sleep(60);
                                 }
                             });
                             thread11.Start();
@@ -453,32 +431,29 @@ namespace PowerfulWindSlickedBackHair
                         return;
                     case 1452L:
                         {
-                            Thread thread10 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("staticYukiForm7", delegate
                             {
                                 StaticYukiForm staticYukiForm7 = new StaticYukiForm();
                                 staticYukiForm7.ShowDialog(new Point(screen.Width / 2 - staticYukiForm7.Width / 2 - 400, screen.Height / 2 - staticYukiForm7.Height / 2), 1486);
                             });
-                            thread10.Start();
                             return;
                         }
                     case 1462L:
                         {
-                            Thread thread9 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("staticYukiForm8", delegate
                             {
                                 StaticYukiForm staticYukiForm8 = new StaticYukiForm();
                                 staticYukiForm8.ShowDialog(new Point(screen.Width / 2 - staticYukiForm8.Width / 2, screen.Height / 2 - staticYukiForm8.Height / 2), 1486);
                             });
-                            thread9.Start();
                             return;
                         }
                     case 1472L:
                         {
-                            Thread thread8 = new Thread((ThreadStart)delegate
+                            Tracker.AddAndStartThread("staticYukiForm9", delegate
                             {
                                 StaticYukiForm staticYukiForm9 = new StaticYukiForm();
                                 staticYukiForm9.ShowDialog(new Point(screen.Width / 2 - staticYukiForm9.Width / 2 + 400, screen.Height / 2 - staticYukiForm9.Height / 2), 1486);
                             });
-                            thread8.Start();
                             return;
                         }
                     case 1512L:
@@ -537,32 +512,29 @@ namespace PowerfulWindSlickedBackHair
                                 break;
                             case 2061L:
                                 {
-                                    Thread thread21 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm10", delegate
                                     {
                                         StaticYukiForm staticYukiForm = new StaticYukiForm();
                                         staticYukiForm.ShowDialog(new Point(screen.Width / 2 - staticYukiForm.Width / 2 - 400, screen.Height / 2 - staticYukiForm.Height / 2), 2141);
                                     });
-                                    thread21.Start();
                                     break;
                                 }
                             case 2071L:
                                 {
-                                    Thread thread20 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm11", delegate
                                     {
                                         StaticYukiForm staticYukiForm2 = new StaticYukiForm();
                                         staticYukiForm2.ShowDialog(new Point(screen.Width / 2 - staticYukiForm2.Width / 2, screen.Height / 2 - staticYukiForm2.Height / 2), 2141);
                                     });
-                                    thread20.Start();
                                     break;
                                 }
                             case 2081L:
                                 {
-                                    Thread thread19 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm12", delegate
                                     {
                                         StaticYukiForm staticYukiForm3 = new StaticYukiForm();
                                         staticYukiForm3.ShowDialog(new Point(screen.Width / 2 - staticYukiForm3.Width / 2 + 400, screen.Height / 2 - staticYukiForm3.Height / 2), 2141);
                                     });
-                                    thread19.Start();
                                     break;
                                 }
                             case 2099L:
@@ -594,32 +566,29 @@ namespace PowerfulWindSlickedBackHair
                                 break;
                             case 2368L:
                                 {
-                                    Thread thread18 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm4", delegate
                                     {
                                         StaticYukiForm staticYukiForm4 = new StaticYukiForm();
                                         staticYukiForm4.ShowDialog(new Point(screen.Width / 2 - staticYukiForm4.Width / 2 - 400, screen.Height / 2 - staticYukiForm4.Height / 2), 2400);
                                     });
-                                    thread18.Start();
                                     break;
                                 }
                             case 2378L:
                                 {
-                                    Thread thread17 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm5", delegate
                                     {
                                         StaticYukiForm staticYukiForm5 = new StaticYukiForm();
                                         staticYukiForm5.ShowDialog(new Point(screen.Width / 2 - staticYukiForm5.Width / 2, screen.Height / 2 - staticYukiForm5.Height / 2), 2400);
                                     });
-                                    thread17.Start();
                                     break;
                                 }
                             case 2388L:
                                 {
-                                    Thread thread16 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("StaticYukiForm6", delegate
                                     {
                                         StaticYukiForm staticYukiForm6 = new StaticYukiForm();
                                         staticYukiForm6.ShowDialog(new Point(screen.Width / 2 - staticYukiForm6.Width / 2 + 400, screen.Height / 2 - staticYukiForm6.Height / 2), 2400);
                                     });
-                                    thread16.Start();
                                     break;
                                 }
                             case 2439L:
@@ -633,12 +602,11 @@ namespace PowerfulWindSlickedBackHair
                                 break;
                             case 2508L:
                                 {
-                                    Thread thread15 = new Thread((ThreadStart)delegate
+                                    Tracker.AddAndStartThread("likeForm", delegate
                                     {
                                         LikeForm likeForm = new LikeForm();
                                         likeForm.ShowDialog(2520);
                                     });
-                                    thread15.Start();
                                     break;
                                 }
                         }
@@ -666,7 +634,7 @@ namespace PowerfulWindSlickedBackHair
                 {
                     isSummonJumpingForm = true;
                     yukiForm = new JumpingYukiForm();
-                    yukiForm.JumpSpace = jumpYukiForm_jumpSpace;
+                    yukiForm.SpeedRate = SpeedRate;
                     yukiForm.ShowDialog(new Point(screen.Width / 2 - yukiForm.Width / 2, screen.Height / 2 - yukiForm.Height / 2), 2864);
                 });
                 thread23.Start();
@@ -692,13 +660,12 @@ namespace PowerfulWindSlickedBackHair
 
         private void ShowStaticPigeon(Point d, Rectangle screen, long endF, bool isGrey)
         {
-            Thread thread = new Thread((ThreadStart)delegate
+            Tracker.AddAndStartThread("staticPigeonF", delegate
             {
                 StaticPigeonF staticPigeonF = new StaticPigeonF();
                 Point point = new Point(screen.Width / 2 - staticPigeonF.Width / 2, screen.Height / 2 - staticPigeonF.Height / 2);
                 staticPigeonF.ShowDialog(new Point(point.X + d.X, point.Y + d.Y), endF, isGrey);
             });
-            thread.Start();
         }
     }
 }

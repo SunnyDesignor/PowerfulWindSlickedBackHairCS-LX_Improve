@@ -26,6 +26,7 @@
             this.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.DogWalk1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(152, 126);
+            this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DogWalkF";

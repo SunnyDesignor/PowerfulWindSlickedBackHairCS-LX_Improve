@@ -4,12 +4,13 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using PowerfulWindSlickedBackHair.Tools;
+using static System.Windows.Forms.AxHost;
 
 namespace PowerfulWindSlickedBackHair.Windows
 {
-	// Token: 0x02000015 RID: 21
-	public partial class JumpingYukiForm : Form
-	{
+    // Token: 0x02000015 RID: 21
+    public partial class JumpingYukiForm : Form
+    {
         private Bitmap upNor;
 
         private Bitmap downNor;
@@ -42,7 +43,10 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         private int lastP = -1;
 
-        private float jumpSpace_static = 1f;
+        private float speedRate = 1f;
+
+        private bool isDown;
+
         private YukiState YukiState
         {
             get
@@ -54,10 +58,10 @@ namespace PowerfulWindSlickedBackHair.Windows
                 state = value;
             }
         }
-        public float JumpSpace
+        public float SpeedRate
         {
-            get { return jumpSpace; }
-            set { jumpSpace_static = value; jumpSpace = value; }
+            get { return speedRate; }
+            set { speedRate = value; speedRate = value; }
         }
 
         public JumpingYukiForm()
@@ -82,13 +86,16 @@ namespace PowerfulWindSlickedBackHair.Windows
                     double num3 = (double)(Tracker.frame - frame) / (double)num;
                     lastP = Math.Max(lastP, (int)((double)startLoc.X + num3 * 1000.0));
                     base.Location = new Point(lastP, startLoc.Y);
+                    MainForm.WindSpeed = 5;
                     Thread.Sleep(1);
                 }
+                MainForm.WindSpeed = 1;
                 canJump = true;
                 lastP = -1;
                 while (base.Location != startLoc)
                 {
                     base.Location = startLoc;
+                    Thread.Sleep(1);
                 }
             };
         }
@@ -96,34 +103,69 @@ namespace PowerfulWindSlickedBackHair.Windows
         public void ShowDialog(Point pos, int endFrame)
         {
             base.Location = pos;
+            jumpSpace = 1 / speedRate;
             yukiJumper = Tracker.AddThread("YukiJumper", delegate
             {
-                for (int i = 0; i < 1024; i++)
+                float startY = base.Location.Y;
+                bool isPerformingJumpAnimation = false;
+                DateTime jumpAnimationStartTime = DateTime.Now;
+                DateTime nextToggleTime = DateTime.Now;
+                while (Tracker.Running)
                 {
-                    SwitchBackgroundSecondly();
-                    Thread thread3 = new Thread((ThreadStart)delegate
+                    DateTime currentTime = DateTime.Now;
+                    if (currentTime < nextToggleTime)
                     {
-                        float num2 = base.Location.Y;
-                        float num3 = 0f;
-                        while (num3 < 0.4f)
+                        if (isPerformingJumpAnimation)
                         {
-                            if (canJump)
+                            if (!canJump)
                             {
-                                num3 += 0.02f + 0.08f * (1f - jumpSpace);
-                                Point location = new Point(base.Location.X, (int)((double)num2 + (double)(jumpHeight * 200f * num3) * Math.Log((double)num3 * 2.5)));
-                                base.Location = location;
-                                Thread.Sleep(1);
+                                isPerformingJumpAnimation = false;
+                                base.Location = new Point(base.Location.X, (int)startY);
+                            }
+                            else
+                            {
+                                TimeSpan elapsedSinceJumpStart = currentTime - jumpAnimationStartTime;
+                                float progress = (float)elapsedSinceJumpStart.TotalSeconds / (0.4f / SpeedRate);
+
+                                if (progress >= 1.0f)
+                                {
+                                    isPerformingJumpAnimation = false;
+                                    base.Location = new Point(base.Location.X, (int)startY);
+                                }
+                                else
+                                {
+                                    float t = progress;
+                                    float verticalOffset = jumpHeight * 4 * t * (1 - t);
+                                    Point location = new Point(base.Location.X, (int)(startY - verticalOffset * 50));
+                                    base.Location = location;
+                                }
                             }
                         }
-                    });
+                        int msToWait = (int)(nextToggleTime - currentTime).TotalMilliseconds;
+                        Thread.Sleep(Math.Min(10, Math.Max(1, msToWait)));
+                        continue;
+                    }
+                    isDown = !isDown;
+                    nextToggleTime = DateTime.Now.AddMilliseconds(431f * jumpSpace);
                     if (canJump)
                     {
-                        thread3.Start();
+                        if (!isPerformingJumpAnimation)
+                        {
+                            isPerformingJumpAnimation = true;
+                            jumpAnimationStartTime = DateTime.Now;
+                        }
                     }
-                    Thread.Sleep((int)(431f * jumpSpace));
+                    else
+                    {
+                        isPerformingJumpAnimation = false;
+                    }
+                    if (!isPerformingJumpAnimation)
+                    {
+                        Thread.Sleep(1);
+                    }
                 }
             });
-            Thread thread = new Thread((ThreadStart)delegate
+            Tracker.AddAndStartThread("yukiJumper", () =>
             {
                 int num = endFrame;
                 yukiJumper.Start();
@@ -134,10 +176,18 @@ namespace PowerfulWindSlickedBackHair.Windows
                 }
                 while (Tracker.frame <= endFrame);
                 Hide();
-                yukiJumper.Abort();
+                if (yukiJumper.IsAlive)
+                {
+                    yukiJumper.Abort();
+                }
             });
-            thread.Start();
-            ShowDialog();
+            try
+            {
+                ShowDialog();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         float maxOpacity = 0.66f;
@@ -151,7 +201,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 172L:
                     {
-                        jumpSpace = 0.4f;
+                        jumpSpace = 0.15f / speedRate;
                         base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread4 = new Thread(yukiMoveToRight);
@@ -160,7 +210,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 235L:
                     base.Opacity = 0.0;
-                    jumpSpace = jumpSpace_static;
+                    jumpSpace = 1 / speedRate;
                     jumpHeight = 1f;
                     base.Location = startLoc;
                     break;
@@ -190,7 +240,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 1392L:
                     {
-                        jumpSpace = 0.4f;
+                        jumpSpace = 0.15f / speedRate;
                         base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread3 = new Thread(yukiMoveToRight);
@@ -199,7 +249,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 1454L:
                     base.Opacity = 0.0;
-                    jumpSpace = jumpSpace_static;
+                    jumpSpace = 1 / speedRate;
                     base.Location = startLoc;
                     jumpHeight = 1f;
                     break;
@@ -219,7 +269,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 1998L:
                     {
-                        jumpSpace = 0.4f;
+                        jumpSpace = 0.15f / speedRate;
                         base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread2 = new Thread(yukiMoveToRight);
@@ -228,7 +278,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     }
                 case 2062L:
                     base.Opacity = 0.0;
-                    jumpSpace = jumpSpace_static;
+                    jumpSpace = 1 / speedRate;
                     base.Location = startLoc;
                     jumpHeight = 1f;
                     break;
@@ -240,7 +290,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     break;
                 case 2304L:
                     {
-                        jumpSpace = 0.4f;
+                        jumpSpace = 0.15f / speedRate;
                         base.Opacity = maxOpacity;
                         jumpHeight = 0f;
                         Thread thread = new Thread(yukiMoveToRight);
@@ -250,7 +300,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 case 2369L:
                     base.Opacity = 0.0;
                     base.Location = startLoc;
-                    jumpSpace = jumpSpace_static;
+                    jumpSpace = 1 / speedRate;
                     jumpHeight = 1f;
                     break;
                 case 2523L:
@@ -261,6 +311,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     base.Opacity = 0.0;
                     break;
             }
+            SwitchBackgroundSecondly();
         }
 
         private void JumpingYukiForm_Load(object sender, EventArgs e)
@@ -275,16 +326,16 @@ namespace PowerfulWindSlickedBackHair.Windows
             switch (YukiState)
             {
                 case YukiState.YellowNormal:
-                    BackgroundImage = ((BackgroundImage == upNor) ? downNor : upNor);
+                    BackgroundImage = (isDown ? downNor : upNor);
                     break;
                 case YukiState.YellowBlow:
-                    BackgroundImage = ((BackgroundImage == upBlw) ? downBlw : upBlw);
+                    BackgroundImage = (isDown ? downBlw : upBlw);
                     break;
                 case YukiState.BlueNormal:
-                    BackgroundImage = ((BackgroundImage == upBluNor) ? downBluNor : upBluNor);
+                    BackgroundImage = (isDown ? downBluNor : upBluNor);
                     break;
                 case YukiState.BlueBlow:
-                    BackgroundImage = ((BackgroundImage == upBluBlw) ? downBluBlw : upBluBlw);
+                    BackgroundImage = (isDown ? downBluBlw : upBluBlw);
                     break;
             }
         }

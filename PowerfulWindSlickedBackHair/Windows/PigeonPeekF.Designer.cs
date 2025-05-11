@@ -26,6 +26,7 @@
             this.BackgroundImage = global::PowerfulWindSlickedBackHair.Properties.Resources.PigeonPeek;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(274, 242);
+            this.DoubleBuffered = true;
             this.Name = "PigeonPeekF";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

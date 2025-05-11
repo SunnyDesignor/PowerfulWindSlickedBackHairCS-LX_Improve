@@ -34,7 +34,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 base.BackgroundImage = value;
                 if (base.IsHandleCreated)
                 {
-                    BeginInvoke((MethodInvoker)delegate
+                    Invoke((MethodInvoker)delegate
                     {
                         base.BackgroundImage = value;
                     });

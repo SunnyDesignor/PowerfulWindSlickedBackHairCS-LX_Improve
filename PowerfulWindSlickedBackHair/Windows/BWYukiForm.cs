@@ -14,7 +14,9 @@ namespace PowerfulWindSlickedBackHair.Windows
 		{
 			this.InitializeComponent();
 			base.StartPosition = FormStartPosition.Manual;
-		}
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value: true);
+            UpdateStyles();
+        }
 
 		// Token: 0x06000030 RID: 48 RVA: 0x000053F0 File Offset: 0x000035F0
 		public void ShowDialog(Point pos, int endFrame)
@@ -27,6 +29,7 @@ namespace PowerfulWindSlickedBackHair.Windows
 				do
 				{
 					flag = (Tracker.frame > (long)endFrame);
+					Thread.Sleep(5);
 				}
 				while (!flag);
 				this.Hide();

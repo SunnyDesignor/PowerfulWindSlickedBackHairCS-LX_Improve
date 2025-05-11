@@ -13,7 +13,11 @@ namespace SoundTouch
 
         public TimeSpan CurrentTime
         {
-            get { return reader.CurrentTime; }
+            get 
+            { 
+                if(reader == null) { return TimeSpan.Zero; }
+                return reader.CurrentTime;
+            }
             set
             {
                 reader.CurrentTime = value;
