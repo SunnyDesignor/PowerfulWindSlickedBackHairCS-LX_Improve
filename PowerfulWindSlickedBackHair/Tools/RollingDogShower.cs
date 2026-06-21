@@ -15,10 +15,19 @@ namespace PowerfulWindSlickedBackHair.Tools
 			Thread thread = new Thread(delegate()
 			{
 				Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;
-				RollingDogF rollingDogF = new RollingDogF();
-				Point pos = new Point(workingArea.Width / 2 - rollingDogF.Width / 2 - 300, workingArea.Height - rollingDogF.Height - 30);
-				rollingDogF.ShowDialog(pos, Tracker.frame + 58L, lastPos, lastPos > 1000);
+				bool shouldShowMsg = lastPos > 1000;
+				using (RollingDogF rollingDogF = new RollingDogF())
+				{
+					Point pos = new Point(workingArea.Width / 2 - rollingDogF.Width / 2 - 300, workingArea.Height - rollingDogF.Height - 30);
+					rollingDogF.ShowDialog(pos, Tracker.frame + 58L, lastPos, shouldShowMsg);
+					if (shouldShowMsg)
+					{
+						Thread.Sleep(1100);
+					}
+				}
 			});
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.IsBackground = true;
 			thread.Start();
 		}
 	}

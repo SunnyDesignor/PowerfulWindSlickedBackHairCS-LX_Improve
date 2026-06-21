@@ -64,29 +64,11 @@ namespace PowerfulWindSlickedBackHair.Windows
         {
             base.TopMost = true;
             base.Location = pos;
-            Thread backSwitcher = new Thread((ThreadStart)delegate
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                while (true)
-                {
-                    long num2 = Tracker.frame % 6;
-                    BackgroundImage = ((num2 < 3) ? walk1 : walk2);
-                    Thread.Sleep(8);
-                }
+                base.BackgroundImage = ((frame % 6 < 3) ? walk1 : walk2);
+                return frame <= (long)endF;
             });
-            Thread thread = new Thread((ThreadStart)delegate
-            {
-                int num = endF;
-                backSwitcher.Start();
-                do
-                {
-                    Thread.Sleep(8);
-                }
-                while (Tracker.frame <= endF);
-                backSwitcher.Abort();
-                Hide();
-            });
-            thread.Start();
-            ShowDialog();
         }
     }
 }

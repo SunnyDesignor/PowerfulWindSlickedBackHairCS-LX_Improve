@@ -11,6 +11,8 @@ namespace PowerfulWindSlickedBackHair.Windows
     // Token: 0x02000008 RID: 8
     public partial class BackgroundForm : Form
     {
+        private const int AuthorInfoShiftOffset = 360;
+
         // Token: 0x0600001D RID: 29 RVA: 0x0000359C File Offset: 0x0000179C
         public BackgroundForm()
         {
@@ -28,21 +30,16 @@ namespace PowerfulWindSlickedBackHair.Windows
         public void ShowDialog(Point pos, int endFrame)
         {
             base.Location = pos;
-            Thread thread = new Thread(delegate ()
+            workingArea = Screen.FromPoint(pos).WorkingArea;
+            originalLeft = ClampLeft(pos.X);
+            base.Left = originalLeft;
+            changedLeft = false;
+            changedLeft2 = false;
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                int endFrame2 = endFrame;
-                bool flag;
-                do
-                {
-                    this.UpdateText(Tracker.frame);
-                    flag = (Tracker.frame > (long)endFrame);
-                    Thread.Sleep(1);
-                }
-                while (!flag);
-                this.Hide();
-            });
-            thread.Start();
-            base.ShowDialog();
+                this.UpdateText(frame);
+                return frame <= (long)endFrame;
+            }, null, null);
         }
 
         // Token: 0x0600001F RID: 31 RVA: 0x000036A4 File Offset: 0x000018A4
@@ -852,7 +849,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                     if (num3 == 2523L)
                     {
                         if (!changedLeft)
-                            this.Left -= 360;
+                            this.Left = ClampLeft(originalLeft - AuthorInfoShiftOffset);
                         changedLeft = true;
                         this.text.Font = new Font(MainForm.otherFont.Families[0], 25f, FontStyle.Bold, GraphicsUnit.Point, 134);
                         this.text.TextAlign = ContentAlignment.MiddleLeft;
@@ -883,7 +880,7 @@ namespace PowerfulWindSlickedBackHair.Windows
                 if (num3 == 2818L)
                 {
                     if (!changedLeft2)
-                        this.Left += 360;
+                        this.Left = originalLeft;
                     changedLeft2 = true;
                     this.text.Font = new Font(MainForm.otherFont.Families[0], 100f, FontStyle.Bold, GraphicsUnit.Point, 134);
                     this.text.TextAlign = ContentAlignment.MiddleCenter;
@@ -897,6 +894,16 @@ namespace PowerfulWindSlickedBackHair.Windows
         }
 
         bool changedLeft, changedLeft2;
+
+        private int originalLeft;
+
+        private Rectangle workingArea;
+
+        private int ClampLeft(int left)
+        {
+            int maxLeft = Math.Max(workingArea.Left, workingArea.Right - base.Width);
+            return Math.Min(Math.Max(left, workingArea.Left), maxLeft);
+        }
 
         // Token: 0x0400001A RID: 26
         private Color backColorY;

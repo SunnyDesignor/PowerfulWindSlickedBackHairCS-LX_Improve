@@ -53,52 +53,27 @@ namespace PowerfulWindSlickedBackHair.Windows
         public void ShowDialog(long endF, Point p)
         {
             base.Location = p;
-            Thread thread = new Thread((ThreadStart)delegate
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                long num = endF;
-                while (true)
+                long num2 = frame % 40;
+                if (num2 < 10)
                 {
-                    long num2 = Tracker.frame % 40;
-                    long num3 = num2;
-                    long num4 = num3;
-                    if (num4 < 10)
-                    {
-                        BackgroundImage = wave1;
-                    }
-                    else
-                    {
-                        long num5 = num4;
-                        if (num5 >= 10 && num5 < 20)
-                        {
-                            BackgroundImage = wave2;
-                        }
-                        else
-                        {
-                            long num6 = num4;
-                            if (num6 >= 20 && num6 < 30)
-                            {
-                                BackgroundImage = wave1F;
-                            }
-                            else
-                            {
-                                long num7 = num4;
-                                if (num7 >= 30 && num7 < 40)
-                                {
-                                    BackgroundImage = wave2F;
-                                }
-                            }
-                        }
-                    }
-                    if (Tracker.frame > endF)
-                    {
-                        break;
-                    }
-                    Thread.Sleep(3);
+                    base.BackgroundImage = wave1;
                 }
-                Hide();
+                else if (num2 < 20)
+                {
+                    base.BackgroundImage = wave2;
+                }
+                else if (num2 < 30)
+                {
+                    base.BackgroundImage = wave1F;
+                }
+                else
+                {
+                    base.BackgroundImage = wave2F;
+                }
+                return frame <= endF;
             });
-            thread.Start();
-            ShowDialog();
         }
     }
 }

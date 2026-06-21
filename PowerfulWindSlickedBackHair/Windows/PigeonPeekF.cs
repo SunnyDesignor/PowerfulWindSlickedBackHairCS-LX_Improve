@@ -57,37 +57,16 @@ namespace PowerfulWindSlickedBackHair.Windows
             startFrame = Tracker.frame;
             endFrame = endF;
             lastPosition = lastPos;
-            sustainLength = endFrame - startFrame;
+            sustainLength = Math.Max(1L, endFrame - startFrame);
             base.Location = pos;
             startLocation = base.Location;
-            Thread thread = new Thread((ThreadStart)delegate
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                int num = endF;
-                Thread thread2 = new Thread((ThreadStart)delegate
-                {
-                    while (true)
-                    {
-                        long num3 = Tracker.frame % 4;
-                        BackgroundImage = ((num3 < 2) ? peek1 : peek2);
-                        Thread.Sleep(5);
-                    }
-                });
-                thread2.Start();
-                while (true)
-                {
-                    double num2 = (double)(Tracker.frame - startFrame) / (double)sustainLength;
-                    base.Location = new Point(startLocation.X - lastPos.Width, (int)((double)startLocation.Y - F(num2) * (double)lastPos.Height));
-                    if (num2 > 0.949999988079071)
-                    {
-                        break;
-                    }
-                    Thread.Sleep(1);
-                }
-                thread2.Abort();
-                Hide();
+                base.BackgroundImage = ((frame % 4 < 2) ? peek1 : peek2);
+                double num2 = (double)(frame - startFrame) / (double)sustainLength;
+                base.Location = new Point(startLocation.X - lastPos.Width, (int)((double)startLocation.Y - F(num2) * (double)lastPos.Height));
+                return num2 <= 0.949999988079071;
             });
-            thread.Start();
-            ShowDialog();
         }
 
         private double F(double x)

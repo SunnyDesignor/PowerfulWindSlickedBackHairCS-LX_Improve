@@ -19,21 +19,11 @@ namespace PowerfulWindSlickedBackHair.Windows
 		// Token: 0x06000062 RID: 98 RVA: 0x000065D4 File Offset: 0x000047D4
 		public void ShowDialog(int endFrame)
 		{
-			Thread thread = new Thread(delegate()
-			{
-				int endFrame2 = endFrame;
-				bool flag;
-				do
-				{
-					flag = (Tracker.frame > (long)endFrame);
-					Thread.Sleep(1);
-                }
-				while (!flag);
-				this.Hide();
-			});
-			thread.Start();
 			base.TopMost = true;
-			base.ShowDialog();
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
+			{
+				return frame <= (long)endFrame;
+			});
 		}
 	}
 }

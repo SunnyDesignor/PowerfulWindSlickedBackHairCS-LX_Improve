@@ -20,20 +20,10 @@ namespace PowerfulWindSlickedBackHair.Windows
 		public void ShowDialog(Point pos, int endFrame)
 		{
 			base.Location = pos;
-			Thread thread = new Thread(delegate()
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
 			{
-				int endFrame2 = endFrame;
-				bool flag;
-				do
-				{
-					flag = (Tracker.frame > (long)endFrame);
-					Thread.Sleep(1);
-				}
-				while (!flag);
-				this.Hide();
+				return frame <= (long)endFrame;
 			});
-			thread.Start();
-			base.ShowDialog();
 		}
 	}
 }

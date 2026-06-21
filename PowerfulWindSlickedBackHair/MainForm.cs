@@ -201,6 +201,8 @@ namespace PowerfulWindSlickedBackHair
 
         SoundPlayer soundPlayer;
 
+        private int hasHandledPlaybackCompleted;
+
         void PlaySound()
         {
             soundPlayer = new SoundPlayer();
@@ -213,15 +215,17 @@ namespace PowerfulWindSlickedBackHair
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (isClose) return;
+            isClose = true;
             Win32APIHelper.CanChangeWallpaper = false;
             Win32APIHelper.ChangeWallpaper(0);
             Tracker.Running = false;
             Tracker.StopAll();
             notifyIcon1.Visible = false;
             notifyIcon1.Dispose();
+            notifyIcon1 = null;
             soundPlayer?.Dispose();
-            isClose = true;
-            Application.Exit();
+            soundPlayer = null;
+            Instance = null;
             new Thread(() =>
             {
                 Thread.Sleep(1500);
@@ -261,19 +265,32 @@ namespace PowerfulWindSlickedBackHair
             }
             else if (num > 3090)
             {
+                if (Interlocked.Exchange(ref hasHandledPlaybackCompleted, 1) == 1)
+                {
+                    return;
+                }
+                if (IsDisposed)
+                {
+                    return;
+                }
                 try
                 {
-                    var result = MessageBox.Show(Text = "如果觉得好玩，欢迎给项目Star、B站点赞 收藏 关注！\n\n如果你有任何问题或建议，请在评论区留言！", "感谢使用", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                    if (result == DialogResult.OK)
+                    if (InvokeRequired)
                     {
-                        Process.Start(new ProcessStartInfo("https://space.bilibili.com/286746249") { UseShellExecute = true });
-                        Process.Start(new ProcessStartInfo("https://www.bilibili.com/video/BV1Kz4y1p7sz") { UseShellExecute = true });
+                        BeginInvoke((MethodInvoker)HandlePlaybackCompleted);
+                    }
+                    else
+                    {
+                        HandlePlaybackCompleted();
                     }
                 }
-                catch (Exception)
+                catch (ObjectDisposedException)
                 {
                 }
-                this.Close();
+                catch (InvalidOperationException)
+                {
+                }
+                return;
             }
 
             long num2 = num;
@@ -640,6 +657,27 @@ namespace PowerfulWindSlickedBackHair
                 thread23.Start();
                 AnimalsShower.StartShow();
             }
+        }
+
+        private void HandlePlaybackCompleted()
+        {
+            if (IsDisposed || isClose)
+            {
+                return;
+            }
+            try
+            {
+                var result = MessageBox.Show(Text = "如果觉得好玩，欢迎给项目Star、B站点赞 收藏 关注！\n\n如果你有任何问题或建议，请在评论区留言！", "感谢使用", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.OK)
+                {
+                    Process.Start(new ProcessStartInfo("https://space.bilibili.com/286746249") { UseShellExecute = true });
+                    Process.Start(new ProcessStartInfo("https://www.bilibili.com/video/BV1Kz4y1p7sz") { UseShellExecute = true });
+                }
+            }
+            catch (Exception)
+            {
+            }
+            Close();
         }
 
         private void threadsList_MouseDown(object sender, MouseEventArgs e)

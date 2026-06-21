@@ -23,22 +23,10 @@ namespace PowerfulWindSlickedBackHair.Windows
 		{
 			base.Location = pos;
 			this.BackgroundImage = (isGrey ? this.grey : this.white);
-			Thread thread = new Thread(delegate()
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
 			{
-				long endF2 = endF;
-				for (;;)
-				{
-					bool flag = Tracker.frame > endF;
-					if (flag)
-					{
-						break;
-					}
-					Thread.Sleep(1);
-				}
-				this.Hide();
+				return frame <= endF;
 			});
-			thread.Start();
-			base.ShowDialog();
 		}
 
 		// Token: 0x04000045 RID: 69

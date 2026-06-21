@@ -27,32 +27,23 @@ namespace PowerfulWindSlickedBackHair.Windows
 		public void ShowDialog(int endFrame)
 		{
 			this.yukiWindow.Show();
-			Thread thread = new Thread(delegate()
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
 			{
-				int endFrame2 = endFrame;
-				for (;;)
+				this.UpdateFlame(frame);
+				return frame <= (long)endFrame;
+			}, delegate(long frame)
+			{
+				FloatWindowHelperF.GetCursorPos(ref this.cursorP);
+				this.yukiWindow.Location = new Point(this.cursorP.X + 8, Cursor.Position.Y - this.yukiWindow.Height / 2);
+				this.yukiWindow.TopMost = true;
+				return true;
+			}, delegate()
+			{
+				if (!this.yukiWindow.IsDisposed)
 				{
-					FloatWindowHelperF.GetCursorPos(ref this.cursorP);
-					this.yukiWindow.Location = new Point(this.cursorP.X + 8, Cursor.Position.Y - this.yukiWindow.Height / 2);
-					this.yukiWindow.TopMost = true;
-					bool flag = this.lastFlame != Tracker.frame;
-					if (flag)
-					{
-						this.lastFlame = Tracker.frame;
-						this.UpdateFlame(Tracker.frame);
-					}
-					bool flag2 = Tracker.frame > (long)endFrame;
-					if (flag2)
-					{
-						break;
-					}
-					Thread.Sleep(3);
+					this.yukiWindow.Close();
 				}
-				this.Hide();
-				this.yukiWindow.Close();
 			});
-			thread.Start();
-			base.ShowDialog();
 		}
 
 		// Token: 0x0600004D RID: 77 RVA: 0x00005CCC File Offset: 0x00003ECC
@@ -207,9 +198,6 @@ namespace PowerfulWindSlickedBackHair.Windows
 
 		// Token: 0x0400003B RID: 59
 		private Point cursorP = default(Point);
-
-		// Token: 0x0400003C RID: 60
-		private long lastFlame;
 
 		// Token: 0x0400003D RID: 61
 		private Rectangle screen;

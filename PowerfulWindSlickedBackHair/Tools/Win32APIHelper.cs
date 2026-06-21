@@ -123,7 +123,8 @@ namespace PowerfulWindSlickedBackHair.Tools
                     int error = Marshal.GetLastWin32Error();
                     Logger.WriteLine($"无法将类型 {type} 的壁纸设置为“{wallpaperToSet}”。错误：{error}");
                 }
-            }).Start();
+            })
+            { IsBackground = true }.Start();
         }
 
         public static void ResetOriginalWallpaperCache()

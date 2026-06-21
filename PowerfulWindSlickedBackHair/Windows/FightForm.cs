@@ -46,23 +46,12 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         public void ShowDialog(long endF)
         {
-            Thread thread = new Thread((ThreadStart)delegate
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                long num = endF;
-                while (true)
-                {
-                    long num2 = Tracker.frame % 6;
-                    BackgroundImage = ((num2 < 2) ? fight1 : ((num2 < 4) ? fight2 : fight3));
-                    if (Tracker.frame > endF)
-                    {
-                        break;
-                    }
-                    Thread.Sleep(3);
-                }
-                Hide();
+                long num2 = frame % 6;
+                base.BackgroundImage = ((num2 < 2) ? fight1 : ((num2 < 4) ? fight2 : fight3));
+                return frame <= endF;
             });
-            thread.Start();
-            ShowDialog();
         }
     }
 }

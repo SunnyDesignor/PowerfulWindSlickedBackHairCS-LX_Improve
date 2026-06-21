@@ -1,18 +1,22 @@
-﻿using System;
-using System.ComponentModel;
+using System;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace PowerfulWindSlickedBackHair.Windows
 {
     public partial class RollingDogF : Form
     {
-        private Bitmap dogWalk1;
+        private const int RollingFrameIntervalMs = 100;
 
-        private Bitmap dogWalk2;
+        private readonly Bitmap dogWalk1;
 
-        private Bitmap dogRolling;
+        private readonly Bitmap dogWalk2;
+
+        private readonly Bitmap[] dogRollingFrames;
+
+        private readonly Icon warningIcon;
+
+        private readonly System.Windows.Forms.Timer animationTimer;
 
         private long switchF;
 
@@ -28,47 +32,27 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         private bool isShowMsg;
 
-        public new Image BackgroundImage
-        {
-            get
-            {
-                if (this.IsDisposed) return null;
-                if (InvokeRequired)
-                {
-                    return (Image)Invoke(new Func<Image>(() => base.BackgroundImage));
-                }
-                return base.BackgroundImage;
-            }
-            set
-            {
-                if (IsDisposed)
-                    return;
-                if (InvokeRequired)
-                {
-                    BeginInvoke((MethodInvoker)delegate
-                    {
-                        if (IsDisposed || !IsHandleCreated)
-                            return;
-                        Image oldImage = base.BackgroundImage;
-                        base.BackgroundImage = value;
-                    });
-                }
-                else
-                {
-                    if (IsDisposed || !IsHandleCreated)
-                        return;
-                    Image oldImage = base.BackgroundImage;
-                    base.BackgroundImage = value;
-                }
-            }
-        }
+        private bool isRollingStarted;
+
+        private bool isAnimationFinished;
+
+        private int currentRollingFrameIndex;
+
+        private long lastRollingFrameTick;
+
+        private NotifyIcon notifyIcon;
 
         public RollingDogF()
         {
             InitializeComponent();
-            dogRolling = new Bitmap("Assets\\RollingDog.png");
+            dogRollingFrames = CreateRollingFrames("Assets\\RollingDog.png");
             dogWalk1 = new Bitmap("Assets\\DogWalk1.png");
             dogWalk2 = new Bitmap("Assets\\DogWalk2.png");
+            warningIcon = new Icon("Assets\\Cross.ico");
+            animationTimer = new System.Windows.Forms.Timer();
+            animationTimer.Interval = 8;
+            animationTimer.Tick += AnimationTimer_Tick;
+            Disposed += RollingDogF_Disposed;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, value: true);
             UpdateStyles();
             base.TopMost = true;
@@ -80,62 +64,143 @@ namespace PowerfulWindSlickedBackHair.Windows
             startFrame = Tracker.frame;
             endFrame = endF;
             lastPosition = lastPos;
-            sustainLength = endFrame - startFrame;
+            sustainLength = Math.Max(1L, endFrame - startFrame);
             startLocation = pos;
             base.Location = pos;
-            this.isShowMsg = isShowMsg;
             switchF = endF - 30;
-            Thread thread = new Thread((ThreadStart)delegate
+            this.isShowMsg = isShowMsg;
+            isRollingStarted = false;
+            isAnimationFinished = false;
+            currentRollingFrameIndex = 0;
+            base.BackgroundImage = dogWalk1;
+            MainForm.WindSpeed = 5;
+            animationTimer.Start();
+            try
             {
-                long num = endF;
-                Thread thread2 = new Thread((ThreadStart)delegate
-                {
-                    while (Tracker.Running)
-                    {
-                        if (Tracker.frame < switchF)
-                        {
-                            long num3 = Tracker.frame % 6;
-                            BackgroundImage = ((num3 < 3) ? dogWalk1 : dogWalk2);
-                        }
-                        else
-                        {
-                            if (this.isShowMsg)
-                            {
-                                NotifyIcon notifyIcon = new NotifyIcon();
-                                notifyIcon.Visible = true;
-                                notifyIcon.BalloonTipText = "风力实在是太强了！\r\n我整条狗都快被吹飞了！";
-                                notifyIcon.Icon = new Icon("Assets\\Cross.ico");
-                                notifyIcon.ShowBalloonTip(1000, "风力实在是太强了！", "我整条狗都快被吹飞了！", ToolTipIcon.Warning);
-                                this.isShowMsg = false;
-                            }
-                            Bitmap bitmap = new Bitmap(dogRolling);
-                            bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                            dogRolling = bitmap;
-                            BackgroundImage = bitmap;
-                            Thread.Sleep(100);
-                        }
-                        Thread.Sleep(8);
-                    }
-                });
-                thread2.Start();
-                while (Tracker.Running)
-                {
-                    double num2 = (double)(Tracker.frame - startFrame) / (double)sustainLength;
-                    base.Location = new Point((int)((double)startLocation.X + num2 * (double)lastPosition), startLocation.Y);
-                    if (Tracker.frame > endF)
-                    {
-                        break;
-                    }
-                    MainForm.WindSpeed = 5;
-                    Thread.Sleep(1);
-                }
+                base.ShowDialog();
+            }
+            finally
+            {
+                animationTimer.Stop();
                 MainForm.WindSpeed = 1;
-                Hide();
-                if (thread2.IsAlive)
-                    thread2.Abort();
-            });
-            thread.Start();
-            ShowDialog();
+            }
+        }
+
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            if (isAnimationFinished)
+            {
+                return;
+            }
+            if (!Tracker.Running)
+            {
+                FinishAnimation();
+                return;
+            }
+            long frame = Tracker.frame;
+            UpdateLocation(frame);
+            if (frame < switchF)
+            {
+                base.BackgroundImage = ((frame % 6 < 3) ? dogWalk1 : dogWalk2);
+            }
+            else
+            {
+                if (!isRollingStarted)
+                {
+                    isRollingStarted = true;
+                    currentRollingFrameIndex = 1;
+                    lastRollingFrameTick = DateTime.UtcNow.Ticks;
+                }
+                if (this.isShowMsg)
+                {
+                    ShowWarning();
+                    this.isShowMsg = false;
+                }
+                UpdateRollingFrame();
+            }
+            if (frame > endFrame)
+            {
+                FinishAnimation();
+            }
+        }
+
+        private void UpdateLocation(long frame)
+        {
+            double progress = Math.Min(1.0, (double)(frame - startFrame) / (double)sustainLength);
+            base.Location = new Point((int)((double)startLocation.X + progress * (double)lastPosition), startLocation.Y);
+        }
+
+        private void UpdateRollingFrame()
+        {
+            long currentTick = DateTime.UtcNow.Ticks;
+            long frameIntervalTick = TimeSpan.TicksPerMillisecond * RollingFrameIntervalMs;
+            long elapsedTick = currentTick - lastRollingFrameTick;
+            if (elapsedTick >= frameIntervalTick)
+            {
+                long step = Math.Max(1L, elapsedTick / frameIntervalTick);
+                currentRollingFrameIndex = (currentRollingFrameIndex + (int)(step % dogRollingFrames.Length)) % dogRollingFrames.Length;
+                lastRollingFrameTick += step * frameIntervalTick;
+            }
+            base.BackgroundImage = dogRollingFrames[currentRollingFrameIndex];
+        }
+
+        private void ShowWarning()
+        {
+            CleanupNotifyIcon();
+            notifyIcon = new NotifyIcon();
+            notifyIcon.Visible = true;
+            notifyIcon.Icon = warningIcon;
+            notifyIcon.BalloonTipTitle = "风力实在是太强了！";
+            notifyIcon.BalloonTipText = "风力实在是太强了！\r\n我整条狗都快被吹飞了！";
+            notifyIcon.ShowBalloonTip(1000, "风力实在是太强了！", "我整条狗都快被吹飞了！", ToolTipIcon.Warning);
+        }
+
+        private void FinishAnimation()
+        {
+            if (isAnimationFinished)
+            {
+                return;
+            }
+            isAnimationFinished = true;
+            animationTimer.Stop();
+            base.Location = new Point(startLocation.X + lastPosition, startLocation.Y);
+            Hide();
+        }
+
+        private void CleanupNotifyIcon()
+        {
+            if (notifyIcon == null)
+            {
+                return;
+            }
+            notifyIcon.Visible = false;
+            notifyIcon.Dispose();
+            notifyIcon = null;
+        }
+
+        private void RollingDogF_Disposed(object sender, EventArgs e)
+        {
+            animationTimer.Dispose();
+            CleanupNotifyIcon();
+            warningIcon.Dispose();
+            dogWalk1.Dispose();
+            dogWalk2.Dispose();
+            foreach (Bitmap dogRollingFrame in dogRollingFrames)
+            {
+                dogRollingFrame.Dispose();
+            }
+        }
+
+        private static Bitmap[] CreateRollingFrames(string imagePath)
+        {
+            Bitmap[] frames = new Bitmap[4];
+            frames[0] = new Bitmap(imagePath);
+            for (int i = 1; i < frames.Length; i++)
+            {
+                frames[i] = new Bitmap(frames[i - 1]);
+                frames[i].RotateFlip(RotateFlipType.Rotate90FlipNone);
+            }
+            return frames;
         }
     }
 }

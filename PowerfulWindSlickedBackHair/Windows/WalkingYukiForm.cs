@@ -29,6 +29,8 @@ namespace PowerfulWindSlickedBackHair.Windows
 
         private int walkState;
 
+        private DateTime nextWalkFrameAt;
+
         public new Image BackgroundImage
         {
             get
@@ -82,50 +84,39 @@ namespace PowerfulWindSlickedBackHair.Windows
             startFrame = Tracker.frame;
             endFrame = endF;
             lastPosition = lastPos;
-            sustainLength = endFrame - startFrame;
+            sustainLength = Math.Max(1L, endFrame - startFrame);
             base.Location = pos;
             startLocation = base.Location;
-            Thread thread = new Thread((ThreadStart)delegate
-            {
-                int num = endF;
-                Thread thread2 = new Thread((ThreadStart)delegate
-                {
-                    while (true)
-                    {
-                        walkState++;
-                        switch (walkState % 4)
-                        {
-                            case 0:
-                                BackgroundImage = walk1;
-                                break;
-                            case 1:
-                                BackgroundImage = walk2;
-                                break;
-                            case 2:
-                                BackgroundImage = walk3;
-                                break;
-                            case 3:
-                                BackgroundImage = walk4;
-                                break;
-                        }
-                        Thread.Sleep(430);
-                    }
-                });
-                thread2.Start();
-                do
-                {
-                    double num2 = (double)(Tracker.frame - startFrame) / (double)sustainLength;
-                    base.Location = new Point((int)((double)startLocation.X - num2 * (double)lastPosition), startLocation.Y);
-                    Thread.Sleep(1);
-                }
-                while (Tracker.frame <= endF);
-                thread2.Abort();
-                Hide();
-            });
-            thread.Start();
+            walkState = 0;
+            nextWalkFrameAt = DateTime.UtcNow;
             try
             {
-                ShowDialog();
+                TrackedDialogHelper.Show(this, 8, delegate(long frame)
+                {
+                    if (DateTime.UtcNow >= nextWalkFrameAt)
+                    {
+                        walkState++;
+                        nextWalkFrameAt = DateTime.UtcNow.AddMilliseconds(430.0);
+                    }
+                    switch (walkState % 4)
+                    {
+                        case 0:
+                            base.BackgroundImage = walk1;
+                            break;
+                        case 1:
+                            base.BackgroundImage = walk2;
+                            break;
+                        case 2:
+                            base.BackgroundImage = walk3;
+                            break;
+                        default:
+                            base.BackgroundImage = walk4;
+                            break;
+                    }
+                    double num2 = (double)(frame - startFrame) / (double)sustainLength;
+                    base.Location = new Point((int)((double)startLocation.X - num2 * (double)lastPosition), startLocation.Y);
+                    return frame <= (long)endF;
+                });
             }
             catch (Exception)
             {

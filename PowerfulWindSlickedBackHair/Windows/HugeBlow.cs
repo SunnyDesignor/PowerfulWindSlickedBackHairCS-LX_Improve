@@ -21,29 +21,20 @@ namespace PowerfulWindSlickedBackHair.Windows
 		// Token: 0x0600006A RID: 106 RVA: 0x00006AD4 File Offset: 0x00004CD4
 		public void ShowDialog(int endFrame)
 		{
-			Thread thread = new Thread(delegate()
-			{
-				int endFrame2 = endFrame;
-				bool flag2;
-				do
-				{
-					bool flag = Tracker.frame == 1820L;
-					if (flag)
-					{
-						this.BackgroundImage = this.blow2;
-					}
-					int num = (int)((PerlinNoise.Noise((float)Tracker.frame / 2f, (float)Tracker.frame / 2f + 200f, 0f) - 0.5f) * 80f);
-					int num2 = (int)((PerlinNoise.Noise((float)Tracker.frame / 2f + 400f, (float)Tracker.frame / 2f + 510f, 0f) - 0.5f) * 80f);
-					this.Location = new Point(num + this.startLoc.X, num2 + this.startLoc.Y);
-					flag2 = (Tracker.frame > (long)endFrame);
-					Thread.Sleep(1);
-				}
-				while (!flag2);
-				this.Hide();
-			});
-			thread.Start();
 			base.TopMost = true;
-			base.ShowDialog();
+			bool isBlowSwitched = false;
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
+			{
+				if (!isBlowSwitched && frame >= 1820L)
+				{
+					this.BackgroundImage = this.blow2;
+					isBlowSwitched = true;
+				}
+				int num = (int)((PerlinNoise.Noise((float)frame / 2f, (float)frame / 2f + 200f, 0f) - 0.5f) * 80f);
+				int num2 = (int)((PerlinNoise.Noise((float)frame / 2f + 400f, (float)frame / 2f + 510f, 0f) - 0.5f) * 80f);
+				this.Location = new Point(num + this.startLoc.X, num2 + this.startLoc.Y);
+				return frame <= (long)endFrame;
+			});
 		}
 
 		// Token: 0x0600006B RID: 107 RVA: 0x00006B1E File Offset: 0x00004D1E

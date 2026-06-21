@@ -22,47 +22,32 @@ namespace PowerfulWindSlickedBackHair.Windows
         {
             base.Location = startPos;
             this.startF = Tracker.frame;
-            Thread thread = new Thread(delegate ()
+            this.isClicked = false;
+            this.Opacity = 1.0;
+            DateTime nextFadeAt = DateTime.UtcNow;
+            TrackedDialogHelper.Show(this, 8, delegate(long frame)
             {
-                int endFrame2 = endFrame;
-                while (true)
+                if (frame > (long)endFrame)
                 {
-                    bool flag = Tracker.frame > (long)endFrame;
-                    if (flag)
-                    {
-                        break;
-                    }
-                    bool flag2 = Tracker.frame > this.startF + 5L && !this.isClicked;
-                    if (flag2)
-                    {
-                        this.BackgroundImage = this.cut;
-                        this.isClicked = true;
-                    }
-                    bool flag3 = this.isClicked;
-                    if (flag3)
-                    {
-                        goto Block_4;
-                    }
-                    Thread.Sleep(1);
+                    return false;
                 }
-                this.Hide();
-                return;
-            Block_4:
-                int i = (int)(this.Opacity * 50.0);
-                while (i > 0)
+                if (frame > this.startF + 5L && !this.isClicked)
                 {
-                    Thread.Sleep(10);
-                    bool flag4 = this.Opacity < 0.05000000074505806;
-                    if (flag4)
+                    this.BackgroundImage = this.cut;
+                    this.isClicked = true;
+                    nextFadeAt = DateTime.UtcNow;
+                }
+                if (this.isClicked && DateTime.UtcNow >= nextFadeAt)
+                {
+                    if (this.Opacity < 0.05000000074505806)
                     {
-                        this.Hide();
+                        return false;
                     }
                     this.Opacity -= 0.019999999552965164;
+                    nextFadeAt = DateTime.UtcNow.AddMilliseconds(10.0);
                 }
-                this.Hide();
+                return true;
             });
-            thread.Start();
-            base.ShowDialog();
         }
 
         // Token: 0x06000035 RID: 53 RVA: 0x0000559D File Offset: 0x0000379D

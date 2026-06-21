@@ -28,27 +28,16 @@ namespace PowerfulWindSlickedBackHair.Windows
 		public void ShowDialog(Point pos, int endF)
 		{
 			base.Location = pos;
-			Thread thread = new Thread(delegate()
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
 			{
-				int endF2 = endF;
-				for (;;)
-				{
-					this.UpdateF(Tracker.frame);
-					bool flag = Tracker.frame > (long)endF;
-					if (flag)
-					{
-						break;
-					}
-					Thread.Sleep(1);
-				}
-				if(hitThread.ThreadState == ThreadState.Running)
-                {
-                    this.hitThread.Abort();
-                }
-				this.Hide();
-			});
-			thread.Start();
-			base.ShowDialog();
+				this.UpdateF(frame);
+				this.UpdateHitF(frame);
+				return frame <= (long)endF;
+			}, delegate(long frame)
+			{
+				this.UpdateHitVisual();
+				return true;
+			}, null);
 		}
 
 		// Token: 0x06000024 RID: 36 RVA: 0x00004EB4 File Offset: 0x000030B4
@@ -88,33 +77,40 @@ namespace PowerfulWindSlickedBackHair.Windows
 		// Token: 0x06000025 RID: 37 RVA: 0x00004F70 File Offset: 0x00003170
 		private void Hit(int offset)
 		{
-			bool flag = this.hitThread != null;
-			if (flag)
+			this.startHitF = Tracker.frame;
+			this.hitOffset = offset;
+			this.hitIndex = 0;
+			this.isHitSequenceActive = true;
+			this.isHitVisible = false;
+			this.pictureBox1.BackgroundImage = this.b1;
+		}
+
+		private void UpdateHitF(long frame)
+		{
+			if (!this.isHitSequenceActive || this.hitIndex >= this.hitF.Length)
 			{
-				bool flag2 = this.hitThread.ThreadState == ThreadState.Running;
-				if (flag2)
-				{
-					this.hitThread.Abort();
-				}
+				return;
 			}
-			this.hitThread = new Thread(delegate()
+			if (frame == this.startHitF + this.hitF[this.hitIndex] + (long)this.hitOffset)
 			{
-				this.startHitF = Tracker.frame;
-				int i = 0;
-				while (i < 10)
-				{
-					bool flag3 = Tracker.frame == this.startHitF + this.hitF[i] + (long)offset;
-					if (flag3)
-					{
-						this.pictureBox1.BackgroundImage = this.b2;
-						i++;
-						Thread.Sleep(50);
-						this.pictureBox1.BackgroundImage = this.b1;
-					}
-					Thread.Sleep(5);
-				}
-			});
-			this.hitThread.Start();
+				this.pictureBox1.BackgroundImage = this.b2;
+				this.hitResetAt = DateTime.UtcNow.AddMilliseconds(50.0);
+				this.isHitVisible = true;
+				this.hitIndex++;
+			}
+		}
+
+		private void UpdateHitVisual()
+		{
+			if (this.isHitVisible && DateTime.UtcNow >= this.hitResetAt)
+			{
+				this.pictureBox1.BackgroundImage = this.b1;
+				this.isHitVisible = false;
+			}
+			if (this.isHitSequenceActive && this.hitIndex >= this.hitF.Length && !this.isHitVisible)
+			{
+				this.isHitSequenceActive = false;
+			}
 		}
 
 		// Token: 0x0400001E RID: 30
@@ -148,6 +144,14 @@ namespace PowerfulWindSlickedBackHair.Windows
 		private long startHitF;
 
 		// Token: 0x04000024 RID: 36
-		private Thread hitThread;
+		private int hitIndex;
+
+		private int hitOffset;
+
+		private bool isHitSequenceActive;
+
+		private bool isHitVisible;
+
+		private DateTime hitResetAt;
 	}
 }

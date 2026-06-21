@@ -27,23 +27,15 @@ namespace PowerfulWindSlickedBackHair.Windows
 		public void ShowDialog(Point pos, int endF)
 		{
 			base.Location = pos;
-			Thread thread = new Thread(delegate()
+			TrackedDialogHelper.Show(this, 8, delegate(long frame)
 			{
-				int endF2 = endF;
-				for (;;)
-				{
-					this.UpdateF(Tracker.frame);
-					bool flag = Tracker.frame > (long)endF;
-					if (flag)
-					{
-						break;
-					}
-					Thread.Sleep(1);
-				}
-				this.Hide();
-			});
-			thread.Start();
-			base.ShowDialog();
+				this.UpdateF(frame);
+				return frame <= (long)endF;
+			}, delegate(long frame)
+			{
+				this.UpdateHitVisual();
+				return true;
+			}, null);
 		}
 
 		// Token: 0x06000094 RID: 148 RVA: 0x00007F28 File Offset: 0x00006128
@@ -78,13 +70,9 @@ namespace PowerfulWindSlickedBackHair.Windows
 		// Token: 0x06000095 RID: 149 RVA: 0x00007FB4 File Offset: 0x000061B4
 		private void Hit()
 		{
-			Thread thread = new Thread(delegate()
-			{
-				this.BackgroundImage = this.hit2;
-				Thread.Sleep(70);
-				this.BackgroundImage = this.hit1;
-			});
-			thread.Start();
+			this.BackgroundImage = this.hit2;
+			this.isHitVisible = true;
+			this.hitResetAt = DateTime.UtcNow.AddMilliseconds(70.0);
 		}
 
 		// Token: 0x06000096 RID: 150 RVA: 0x00007FDB File Offset: 0x000061DB
@@ -92,6 +80,15 @@ namespace PowerfulWindSlickedBackHair.Windows
 		{
 			this.BackColor = this.backColorY;
 			this.Hit();
+		}
+
+		private void UpdateHitVisual()
+		{
+			if (this.isHitVisible && DateTime.UtcNow >= this.hitResetAt)
+			{
+				this.BackgroundImage = this.hit1;
+				this.isHitVisible = false;
+			}
 		}
 
 		// Token: 0x0400007D RID: 125
@@ -105,5 +102,9 @@ namespace PowerfulWindSlickedBackHair.Windows
 
 		// Token: 0x04000080 RID: 128
 		private Color backColorB;
+
+		private bool isHitVisible;
+
+		private DateTime hitResetAt;
 	}
 }

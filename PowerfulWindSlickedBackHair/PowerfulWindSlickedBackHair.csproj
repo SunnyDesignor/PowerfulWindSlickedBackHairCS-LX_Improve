@@ -229,6 +229,7 @@
     <Compile Include="Windows\StaticYukiForm.Designer.cs">
       <DependentUpon>StaticYukiForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TrackedDialogHelper.cs" />
     <Compile Include="Windows\WalkingYukiForm.cs">
       <SubType>Form</SubType>
     </Compile>
